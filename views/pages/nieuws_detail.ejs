@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="nl">
+<%- include('../partials/head') %>
+
+  <body>
+    <%- include('../partials/header') %>
+
+      <main class="container my-5 " style="padding-top: 60px;">
+        <a href="/nieuws?page=<%= returnPage %>" class="text-decoration-none mb-4 d-inline-block">
+          ← Terug naar overzicht
+        </a>
+
+        <article class="news-detail">
+          <h1 class="mb-3">
+            <%= nieuws.title %>
+          </h1>
+          <p class="text-muted mb-2">
+            <%= new Date(nieuws.date).toLocaleDateString('nl-BE', { day: 'numeric' , month: 'long' , year: 'numeric' })
+              %>
+          </p>
+
+          <div class="position-relative">
+            <% if (nieuws.imageUrl) { %>
+              <img src="<%= nieuws.imageUrl %>" alt="<%= nieuws.title %>"
+                class="img-fluid rounded shadow-sm float-end ms-4 mb-3 detail-image">
+              <% } %>
+
+                <div class="news-text">
+                  <p class="lead" style="white-space: pre-line;">
+                    <%- nieuws.description %>
+                  </p>
+                </div>
+          </div>
+        </article>
+      </main>
+
+      <%- include('../partials/footer') %>
+  </body>
+
+</html>

@@ -1,0 +1,50 @@
+<%
+    const maxVisible = 3;
+    const pagesToShow = [];
+    const startPage = Math.max(1, current - Math.floor(maxVisible / 2));
+    const endPage = Math.min(pages, startPage + maxVisible - 1);
+
+    // Hulpfunctie om pagina nav item te renderen
+    const renderPageItem = (page, text) => {
+%>
+        <li class="page-item <%= page === current ? 'active' : '' %> <%= page < 1 || page > pages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= page %>">
+                <%= text || page %>
+            </a>
+        </li>
+<%
+    };
+%>
+
+<nav aria-label="Nieuws paginatie">
+    <ul class="pagination justify-content-center mt-4">
+
+        <%= renderPageItem(current - 1, '«') %>
+
+        <% 
+            // Toon de eerste pagina
+            if (startPage > 1) {
+                renderPageItem(1);
+                if (startPage > 2) {
+                    %><li class="page-item disabled"><span class="page-link">...</span></li><%
+                }
+            }
+            
+            // Toon de tussenliggende paginanummers
+            for (let i = startPage; i <= endPage; i++) {
+                renderPageItem(i);
+            }
+
+            // Toon de laatste pagina
+            if (endPage < pages) {
+                if (endPage < pages - 1) {
+                    %><li class="page-item disabled"><span class="page-link">...</span></li><%
+                }
+                renderPageItem(pages);
+            }
+        %>
+
+        <%= renderPageItem(current + 1, '»') %>
+
+    </ul>
+</nav>

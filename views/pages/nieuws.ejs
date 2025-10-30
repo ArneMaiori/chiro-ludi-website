@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<%- include('../partials/head') %>
+
+  <body>
+    <%- include('../partials/header') %>
+
+      <section class="hero">
+        <h1>Nieuws</h1>
+      </section>
+
+      <!-- Main content -->
+      <main class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <!-- Admin: knop om nieuwe post toe te voegen -->
+          <% if (isAdmin) { %>
+            <a href="/nieuws/admin/create?page=<%= current %>" class="btn btn-success w-100">
+              <i class="bi bi-plus-circle me-2"></i> Nieuwe post
+            </a>
+            <% } %>
+        </div>
+
+        <div class="row gy-4">
+          <% if (nieuws && nieuws.length> 0) { %>
+            <% nieuws.forEach(n=> { %>
+              <div class="col-12">
+                <div class="news-preview shadow-sm rounded">
+                  <!-- Tekst -->
+                  <div class="text-section">
+                    <div>
+                      <h4 class="mb-2">
+                        <%= n.title %>
+                      </h4>
+                      <p class="text-muted small mb-3">
+                        <%= new Date(n.date).toLocaleDateString('nl-BE', { day: 'numeric' , month: 'long' ,
+                          year: 'numeric' }) %>
+                      </p>
+                      <p class="description text-muted">
+                        <%- n.description %>
+                      </p>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                      <a href="/nieuws/<%= n._id %>?page=<%= current %>" class="text-primary text-decoration-none">Lees meer →</a>
+
+                      <% if (isAdmin) { %>
+                        <div class="d-flex gap-2">
+                          <a href="/nieuws/admin/edit/<%= n._id %>?page=<%= current %>" class="btn btn-sm btn-outline-warning">
+                            <i class="bi bi-pencil"></i>
+                          </a>
+
+                          <form method="POST" action="/nieuws/admin/delete/<%= n._id %>?page=<%= current %>" class="d-inline"
+                            onsubmit="return confirm('Weet je zeker dat je deze post wilt verwijderen?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </form>
+                        </div>
+                        <% } %>
+                    </div>
+                  </div>
+
+                  <!-- Afbeelding -->
+                  <% if (n.imageUrl) { %>
+                    <div class="flex-shrink-0" style="width: 25%;">
+                      <img src="<%= n.imageUrl %>" alt="<%= n.title %>">
+                    </div>
+                    <% } else { %>
+                      <div class="flex-shrink-0" style="width: 25%;">
+                        <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1758641130/LogoLudi_wwtw2z.png"
+                          alt="<%= n.title %>">
+                      </div>
+                      <% } %>
+                </div>
+
+              </div>
+              <% }); %>
+                <% } else { %>
+                  <div class="col-12">
+                    <div class="alert alert-info text-center">
+                      <h4>Nog geen nieuws</h4>
+                      <p class="mb-0">Er is momenteel geen nieuws.</p>
+                      <% if (isAdmin) { %>
+                        <a href="/nieuws/admin/create?page=<%= current %>" class="btn btn-primary mt-3">Maak de eerste post aan</a>
+                        <% } %>
+                    </div>
+                  </div>
+                  <% } %>
+        </div>
+
+        <%- include('../partials/nieuws_pagination', { current: current, pages: pages }) %>
+
+      </main>
+
+      <%- include('../partials/footer') %>
+  </body>
+
+</html>

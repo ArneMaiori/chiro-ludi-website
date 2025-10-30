@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<%- include('../partials/head') %>
+
+    <body>
+
+        <%- include('../partials/header') %>
+
+        <section class="hero">
+            <h1>Contacteer ons</h1>
+        </section>
+
+        <main class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+
+                    <div class="row g-4">
+                        
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-4">
+                                <h2 class="mb-0 me-3">Onze Hoofdleiding</h2>
+                                
+                                <% if (isAdmin) { %>
+                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editHoofdleidingModal" title="Hoofdleiding gegevens bewerken">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                <% } %>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <% 
+                                    // Hardcoded dummy data. Dit moet je vervangen door data uit je database/configuratie.
+                                    var hoofdleidingen = [
+                                        { naam: 'Arne Maes', tel: '0499 12 34 56', email: 'arne@chiroludi.be' },
+                                        { naam: 'Lisa Peeters', tel: '0477 98 76 54', email: 'lisa@chiroludi.be' },
+                                        { naam: '', tel: '', email: '' } // Leeg veld dat niet getoond zal worden
+                                    ]; 
+                                %>
+
+                                <% hoofdleidingen.forEach((leiding) => { %>
+                                    <% if (leiding.naam || leiding.tel || leiding.email) { %>
+                                        <div class="col-12">
+                                            <div class="card shadow-sm border-0">
+                                                <div class="card-body">
+                                                    <h5 class="card-title text-danger mb-3"><%= leiding.naam %></h5>
+                                                    <% if (leiding.tel) { %>
+                                                        <p class="mb-1"><i class="bi bi-telephone-fill me-2"></i> <strong>Telefoon:</strong> <%= leiding.tel %></p>
+                                                    <% } %>
+                                                    <% if (leiding.email) { %>
+                                                        <p class="mb-0"><i class="bi bi-envelope-fill me-2"></i> <strong>E-mail:</strong> <a href="mailto:<%= leiding.email %>"><%= leiding.email %></a></p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+
+                                <% if (hoofdleidingen.filter(l => l.naam).length === 0) { %>
+                                    <div class="col-12">
+                                        <p class="alert alert-info">Momenteel is er geen hoofdleiding informatie beschikbaar.</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h2 class="mb-4">Waar vind je ons?</h2>
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body p-0">
+                                    <iframe 
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2516.4831682660144!2d5.498871315806497!3d50.90678687955529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c1328900000001%3A0x8e8e8e8e8e8e8e8e!2sChirolokalen%20Diepenbeek!5e0!3m2!1sen!2sbe!4v1633000000000!5m2!1sen!2sbe" 
+                                        width="100%" 
+                                        height="500" 
+                                        style="border:0; border-radius: 0.5rem;" 
+                                        allowfullscreen="" 
+                                        loading="lazy" 
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                </div>
+                            </div>
+                            <p class="text-muted small mt-2">
+                                <i class="bi bi-geo-alt-fill me-1"></i> Adres: Pastoor Paquaylaan 121, 3590 Diepenbeek
+                            </p>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="card shadow-lg border-0">
+                                <div class="card-body p-4">
+                                    <h2 class="card-title mb-4">Stel een vraag</h2>
+                                    <p class="text-muted">
+                                        Heb je een specifieke vraag over de werking, uren of inschrijvingen? Stuur ons een bericht!
+                                    </p>
+                                    <form action="/submit-contact" method="POST">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="naam" class="form-label">Naam *</label>
+                                                <input type="text" class="form-control" id="naam" name="naam" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="email" class="form-label">E-mailadres *</label>
+                                                <input type="email" class="form-control" id="email" name="email" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="onderwerp" class="form-label">Onderwerp</label>
+                                                <input type="text" class="form-control" id="onderwerp" name="onderwerp">
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="bericht" class="form-label">Je Bericht *</label>
+                                                <textarea class="form-control" id="bericht" name="bericht" rows="5" required></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary">Verstuur bericht</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="modal fade" id="editHoofdleidingModal" tabindex="-1" aria-labelledby="editHoofdleidingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editHoofdleidingModalLabel">Hoofdleidingen bewerken</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                    </div>
+                    <form id="hoofdleidingForm" method="POST" action="/admin/save-hoofdleiding-data">
+                        <div class="modal-body">
+                            <p class="alert alert-info small">
+                                Geef de gegevens voor maximaal 3 hoofdleidingen op. Lege velden worden niet getoond op de contactpagina.
+                            </p>
+                            
+                            <% for (var i = 1; i <= 3; i++) { %>
+                                <h6 class="mt-4 border-bottom pb-1">Hoofdleiding <%= i %></h6>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-4">
+                                        <label for="naam<%= i %>" class="form-label">Naam</label>
+                                        <input type="text" class="form-control" id="naam<%= i %>" name="hoofdleiding_<%= i %>_naam" value="">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="tel<%= i %>" class="form-label">Telefoon</label>
+                                        <input type="tel" class="form-control" id="tel<%= i %>" name="hoofdleiding_<%= i %>_tel" value="">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="email<%= i %>" class="form-label">E-mail</label>
+                                        <input type="email" class="form-control" id="email<%= i %>" name="hoofdleiding_<%= i %>_email" value="">
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button type="submit" class="btn btn-primary">Opslaan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/footer') %>
+
+        <script>
+            // Logica om de (hardcoded/fictieve) data in de modal te laden bij openen.
+            document.addEventListener('DOMContentLoaded', function () {
+                var currentData = [
+                    { naam: 'Arne Maes', tel: '0499 12 34 56', email: 'arne@chiroludi.be' },
+                    { naam: 'Lisa Peeters', tel: '0477 98 76 54', email: 'lisa@chiroludi.be' },
+                    { naam: '', tel: '', email: '' } 
+                ];
+
+                var modal = document.getElementById('editHoofdleidingModal');
+                // Zorg ervoor dat de modal pas wordt geladen nadat Bootstrap is geïnitialiseerd.
+                if (modal) {
+                    modal.addEventListener('show.bs.modal', function () {
+                        for (var i = 1; i <= 3; i++) {
+                            var leiding = currentData[i - 1] || { naam: '', tel: '', email: '' };
+                            document.getElementById('naam' + i).value = leiding.naam;
+                            document.getElementById('tel' + i).value = leiding.tel;
+                            document.getElementById('email' + i).value = leiding.email;
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+
+</html>

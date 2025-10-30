@@ -1,0 +1,114 @@
+<footer class="bg-dark text-white py-4">
+  <div class="container">
+    <div class="text-center">
+      <small>&copy; 2025 Chiro Ludi. Alle rechten voorbehouden. | </small>
+      <!-- Admin link/logout -->
+      <% if (typeof isAdmin !=='undefined' && isAdmin) { %>
+        <button id="logoutBtn" class="btn btn-sm btn-outline-light">
+          <i class="bi bi-box-arrow-right"></i> Uitloggen
+        </button>
+
+        <% } else { %>
+          <a href="#" class="text-white text-decoration-none small" data-bs-toggle="modal" data-bs-target="#adminModal">
+            Admin
+          </a>
+          <% } %>
+    </div>
+  </div>
+</footer>
+
+<!-- Admin Login Modal -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="adminModalLabel">Admin Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="adminLoginForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="adminPassword" class="form-label">Wachtwoord</label>
+            <input type="password" class="form-control" id="adminPassword" name="password"
+              placeholder="Voer admin wachtwoord in" required autofocus>
+          </div>
+          <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+            Verkeerd wachtwoord. Probeer opnieuw.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+          <button type="submit" class="btn btn-primary">Inloggen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('adminLoginForm');
+    const errorMsg = document.getElementById('errorMessage');
+    const adminModalEl = document.getElementById('adminModal');
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const password = document.getElementById('adminPassword').value;
+
+        const res = await fetch('/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+          credentials: 'same-origin'
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          location.reload();
+        } else {
+          errorMsg.classList.remove('d-none');
+        }
+      });
+    }
+
+    // Logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        const res = await fetch('/admin/logout', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          location.reload();
+        }
+      });
+    }
+
+    // Close modal 
+    if (adminModalEl) {
+      adminModalEl.addEventListener('shown.bs.modal', () => {
+        document.getElementById('adminPassword').focus();
+      });
+      adminModalEl.addEventListener('hidden.bs.modal', () => {
+        errorMsg.classList.add('d-none');
+        loginForm.reset();
+      });
+    }
+  });
+</script>
+
+
+
+<!-- Script om error message te tonen als inlog faalt -->
+<% if (typeof error !=='undefined' && error) { %>
+  <script>
+    // Open modal automatisch als er een error is
+    document.addEventListener('DOMContentLoaded', function () {
+      var adminModal = new bootstrap.Modal(document.getElementById('adminModal'));
+      adminModal.show();
+      document.getElementById('errorMessage').classList.remove('d-none');
+    });
+  </script>
+  <% } %>

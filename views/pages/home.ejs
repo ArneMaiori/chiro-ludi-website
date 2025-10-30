@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<%- include('../partials/head') %>
+
+    <body>
+
+        <%- include('../partials/header') %>
+
+            <section class="hero">
+                <h1>Chiro Ludi</h1>
+            </section>
+
+            <main class="container my-5">
+                <div class="row">
+
+                    <div class="col-lg-8 mb-4">
+                        <h2 class="mb-4">Laatste Nieuws</h2>
+
+                        <div class="row gy-4">
+                            <% if (recentNieuws && recentNieuws.length > 0) { %>
+                                <% recentNieuws.forEach(item => { %>
+                                    <div class="col-12">
+                                        <div class="news-preview shadow-sm rounded">
+                                            <div class="text-section">
+                                                <div>
+                                                    <h4 class="mb-2">
+                                                        <%= item.title %>
+                                                    </h4>
+                                                    <p class="text-muted small mb-3">
+                                                        <%= new Date(item.date).toLocaleDateString('nl-BE', { day: 'numeric' , month: 'long' , year: 'numeric' }) %>
+                                                    </p>
+                                                    
+                                                    <p class="description text-muted">
+                                                        <% 
+                                                            var cleanDescription = item.description.replace(/<[^>]*>?/gm, ''); 
+                                                            var previewText = cleanDescription.substring(0, 200);
+                                                        %>
+                                                        <%= previewText %>...
+                                                    </p>
+
+                                                </div>
+
+                                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                                    <a href="/nieuws/<%= item._id %>" class="text-primary text-decoration-none">Lees meer →</a>
+                                                </div>
+                                            </div>
+
+                                            <% if (item.imageUrl) { %>
+                                                <div class="flex-shrink-0" style="width: 25%;">
+                                                    <img src="<%= item.imageUrl %>" alt="<%= item.title %>">
+                                                </div>
+                                            <% } else { %>
+                                                <div class="flex-shrink-0" style="width: 25%;">
+                                                    <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1758641130/LogoLudi_wwtw2z.png"
+                                                        alt="<%= item.title %>">
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            
+                                <div class="col-12 text-center mt-4">
+                                    <a href="/nieuws" class="more-news-link">
+                                        Meer nieuws →
+                                    </a>
+                                </div>
+
+                            <% } else { %>
+                                <div class="col-12">
+                                    <p class="alert alert-info">Er is momenteel geen nieuws.</p>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <h2>Acties</h2>
+                        <div id="actiesCarousel" class="carousel slide acties-widget"
+                            data-bs-ride="carousel" data-bs-interval="8000">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <p>Actie 1: Schrijf je in voor ons kamp!</p>
+                                </div>
+                                <div class="carousel-item">
+                                    <p>Actie 2: Steun onze koekjesverkoop</p>
+                                </div>
+                                <div class="carousel-item">
+                                    <p>Actie 3: Help ons bij de quizavond!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="socials mt-4 p-3 rounded shadow-sm">
+                            <h2 class="mb-3 text-center">Volg ons</h2>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="https://facebook.com/chirolutselusdiepenbeek" target="_blank"
+                                    class="btn btn-social-facebook btn-lg">
+                                    <i class="bi bi-facebook"></i>
+                                </a>
+                                <a href="https://www.instagram.com/chiroludi?igsh=YW5jeGQ2amhoZHpi"
+                                    target="_blank" class="btn btn-social-instagram btn-lg">
+                                    <i class="bi bi-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <%- include('../partials/footer') %>
+    </body>
+
+</html>
