@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Formulier Elementen ---
     const form = document.getElementById('heroImageForm');
     const modalPageKey = document.getElementById('modalPageKey');
+    const modalExistingImagePublicId = document.getElementById('modalExistingImagePublicId');
     const modalExistingImageUrl = document.getElementById('modalExistingImageUrl');
     const modalImageRemoved = document.getElementById('modalImageRemoved');
     const newImageInput = document.getElementById('newImage');
@@ -50,10 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget; 
         const pageKey = button.getAttribute('data-page-key');
+        const currentPublicId = button.getAttribute('data-current-public-id');
         const currentUrl = button.getAttribute('data-current-url');
-        const isDefault = button.getAttribute('data-is-default') === 'true'; 
-        const pageTitle = button.closest('section').querySelector('h1').textContent;
-        document.getElementById('modalPageTitle').textContent = pageTitle;
+        const isDefault = button.getAttribute('data-is-default') === 'true';
 
         // Reset state
         form.reset();
@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Vul gegevens in en toon de image display
         modalPageKey.value = pageKey;
         modalExistingImageUrl.value = currentUrl; 
+        modalExistingImagePublicId.value = currentPublicId;
         showImageDisplay(currentUrl, isDefault);
     });
 
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (this.files && this.files[0]) {
             updatePreview(this.files[0]);
             
-            currentImageLabel.textContent = 'Nieuwe Afbeelding Geselecteerd';
+            currentImageLabel.textContent = 'Nieuwe afbeelding geselecteerd';
             btnRemoveImage.style.display = 'none'; 
 
             modalImageRemoved.value = 'false';

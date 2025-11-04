@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const cloudinary = require('../config/cloudinary');
 
 const Config = require('../models/Config');
 
@@ -10,7 +11,7 @@ const isAdmin = require('../middleware/isAdmin');
 /// ---------- Configurations ---------- ///
 // Multer
 const storage = multer.memoryStorage();
-const upload = multer({ storage }); 
+const upload = multer({ storage });
 
 
 /// ---------- Admin Routes ---------- ///
@@ -39,34 +40,64 @@ router.post('/logout', (req, res) => {
 
 // POST /admin/hero-config - Nieuwe hero-afbeelding upload
 router.post('/hero-config', isAdmin, upload.single('image'), async (req, res) => {
-    const { pageKey, existingImageUrl, imageRemoved } = req.body;
-    
-    try {
-        let newImageUrl = existingImageUrl;
-        
-        // Verwijder image, pak default image
-        if (imageRemoved === 'true') {
-            newImageUrl = null;
-        } 
-        
-        // Nieuwe afbeelding uploaden
-        else if (req.file && req.file.buffer) {
-            const result = await uploadBufferToCloudinary(req.file.buffer, 'chiro/hero-images');
-            newImageUrl = result.secure_url;
+  const { pageKey, existingImagePublicId, imageRemoved } = req.body;
+
+  try {
+    let newImageUrl = null;
+    let newPublicId = null;
+
+    // Functie om de oude afbeelding te verwijderen
+    const deleteOldImage = async (publicId) => {
+      if (publicId) {
+        try {
+          await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+          console.error('Fout bij verwijderen oude Cloudinary afbeelding:', err);
         }
+      }
+    };
 
-        // Updaten in de database
-        await Config.findOneAndUpdate(
-            { pageKey: pageKey },
-            { heroImageUrl: newImageUrl },
-            { upsert: true, new: true }
-        );
+    // Oude afbeelding verwijderen en nieuwe uploaden
+    if (req.file && req.file.buffer) {
+      await deleteOldImage(existingImagePublicId);
 
-        res.redirect(`/${pageKey === 'home' ? '' : pageKey}`);
-    } catch (error) {
-        console.error('Fout bij hero-afbeelding bewerking:', error);
-        res.status(500).send('Fout bij het opslaan van de hero-afbeelding.');
+      const result = await uploadBufferToCloudinary(req.file.buffer, 'chiro/hero-images');
+      newImageUrl = result.secure_url;
+      newPublicId = result.public_id;
     }
+    // Verwijder image, pak default image
+    else if (imageRemoved === 'true') {
+      await deleteOldImage(existingImagePublicId);
+      newImageUrl = null;
+      newPublicId = null;
+    }
+    // Niks gewijzigd
+    else {
+      return res.redirect(`/${pageKey === 'home' ? '' : pageKey}`);
+    }
+
+    // Updaten in de database
+    await Config.findOneAndUpdate(
+      { pageKey: pageKey },
+      {
+        $set: {
+          heroImageUrl: newImageUrl,
+          heroImagePublicId: newPublicId,
+        },
+        $setOnInsert: { pageKey: pageKey }
+      },
+      {
+        upsert: true,
+        new: true,
+        runValidators: true
+      }
+    );
+
+    res.redirect(`/${pageKey === 'home' ? '' : pageKey}`);
+  } catch (error) {
+    console.error('Fout bij hero-afbeelding bewerking:', error);
+    res.status(500).send('Fout bij het opslaan van de hero-afbeelding.');
+  }
 });
 
 module.exports = router;
