@@ -23,10 +23,8 @@ main {
   color: #dc3545 !important;
 }
 
-/* HOME PAGE - Hero section */
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('https://res.cloudinary.com/dph1xlgfc/image/upload/v1759244464/GebouwChiro_rmjnjp.jpg') no-repeat center center;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)) no-repeat center center;
   background-size: cover;
   height: 60vh;
   display: flex;

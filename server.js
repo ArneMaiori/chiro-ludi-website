@@ -46,7 +46,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 
 /// ---------- Routes ---------- ///
-// Home pagina
+// GET / - Home pagina
 app.get('/', async (req, res) => {
     let recentNieuws = [];
 
@@ -64,7 +64,7 @@ app.get('/', async (req, res) => {
     });
 });
 
-// Contact pagina
+// GET /contact - Contact pagina
 app.get('/contact', async (req, res) => {
     res.render('pages/contact', {
         isAdmin: req.session.isAdmin || false,
@@ -75,7 +75,7 @@ app.get('/contact', async (req, res) => {
 /**
  * @todo chiro email + pass opvragen
  */
-// Contact - stel vraag
+// POST /submit-contact - stel vraag aan email
 app.post('/submit-contact', async (req, res) => {
     const { naam, email, onderwerp, bericht } = req.body;
 

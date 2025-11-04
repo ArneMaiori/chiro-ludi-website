@@ -1,5 +1,8 @@
 <%
-    const heroImage = pageConfig && pageConfig.heroImageUrl ? pageConfig.heroImageUrl : 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1759244464/GebouwChiro_rmjnjp.jpg'; 
+    const DEFAULT_URL = 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1759244464/GebouwChiro_rmjnjp.jpg';
+    const heroImage = pageConfig && pageConfig.heroImageUrl ? pageConfig.heroImageUrl : DEFAULT_URL;
+    
+    const isDefault = heroImage === DEFAULT_URL;
 %>
 
 <section class="hero" style="background-image: url('<%= heroImage %>');">
@@ -11,7 +14,8 @@
                 data-bs-target="#heroEditModal" 
                 data-page-key="<%= pageKey %>"
                 data-current-url="<%= heroImage %>"
-                title="Hero afbeelding bewerken">
+                data-is-default="<%= isDefault %>"
+                title="Afbeelding bewerken">
             <i class="bi bi-pencil-square me-1"></i> Afbeelding
         </button>
     <% } %>
@@ -22,42 +26,38 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="heroEditModalLabel">Hero Afbeelding Bewerken</h5>
+                <h5 class="modal-title" id="heroEditModalLabel">Afbeelding Bewerken</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
             </div>
             
             <form id="heroImageForm" method="POST" action="/admin/hero-config" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <p class="alert alert-info small mb-3">Wijzig de achtergrondafbeelding voor de **<span id="modalPageTitle"></span>** pagina.</p>
+                    <p class="alert alert-info small mb-3">Wijzig de achtergrondafbeelding voor de <%= pageKey %> pagina.</p>
                     
                     <input type="hidden" name="pageKey" id="modalPageKey">
                     <input type="hidden" name="existingImageUrl" id="modalExistingImageUrl">
                     <input type="hidden" name="imageRemoved" id="modalImageRemoved" value="false">
 
                     <div id="modalImageDisplaySection" class="text-center mb-3 p-3 border rounded">
-                        <label class="form-label d-block">Huidige Afbeelding</label>
+                        <label class="form-label d-block"><span id="currentImageLabel">Huidige Afbeelding</span></label>
                         <img id="modalPreviewImage" src="" alt="Huidige afbeelding" class="img-fluid mb-3 rounded" style="max-height: 200px;">
                         
-                        <div class="d-flex gap-2 justify-content-center">
-                            <button type="button" class="btn btn-sm btn-outline-warning" id="modalBtnChangeImage">
-                                <i class="bi bi-pencil me-1"></i> Aanpassen
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" id="modalBtnRemoveImage">
-                                <i class="bi bi-trash me-1"></i> Verwijderen
-                            </button>
-                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger" id="modalBtnRemoveImage" style="display: none;">
+                            <i class="bi bi-trash me-1"></i> Verwijderen
+                        </button>
                     </div>
-                    
-                    <div id="modalImageUploadSection" class="mt-3" style="display: none;">
+                   
+                    <hr class="my-3">
+
+                    <div id="modalImageUploadSection">
                         <label for="newImage" class="form-label">Nieuwe Afbeelding (PNG, JPG, WEBP)</label>
                         <input type="file" class="form-control" id="newImage" name="image" accept="image/jpeg,image/png,image/webp">
                         <div class="form-text">Max 5MB.</div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="modalBtnCancelChange">Annuleren</button>
                     </div>
 
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" id="modalBtnClose" data-bs-dismiss="modal">Annuleren</button>
                     <button type="submit" class="btn btn-primary">Opslaan</button>
                 </div>
             </form>
