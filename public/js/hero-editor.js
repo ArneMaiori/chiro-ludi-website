@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadSection.style.display = 'block'; 
         
         currentImageLabel.textContent = isDefault ? 'Huidige Afbeelding (standaard)' : 'Huidige Afbeelding';
-        btnRemoveImage.style.display = isDefault ? 'none' : 'block';
+        btnRemoveImage.style.display = isDefault ? 'none' : 'inline-block';
     }
 
     /**

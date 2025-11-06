@@ -22,37 +22,43 @@
 
                                     <input type="hidden" name="returnPage" value="<%= returnPage %>">
 
+                                    <!-- Titel -->
                                     <div class="mb-3">
                                         <label for="title" class="form-label">Titel *</label>
                                         <input type="text" class="form-control" id="title" name="title" required
                                             placeholder="Bv. Startdag 2025" value="<%= post ? post.title : '' %>">
                                     </div>
 
-                                    <div class="mb-4 p-3 border rounded">
-
+                                    <!-- Afbeelding -->
+                                    <div>
+                                        <label for="image" class="form-label">Afbeelding (optioneel)</label>
+                                    </div>
+                                    <div class="mb-3 p-3 border rounded text-center">
                                         <input type="hidden" name="existingImageUrl" id="existingImageUrl" value="<%= post && post.imageUrl ? post.imageUrl : '' %>">
+                                        <input type="hidden" name="existingImagePublicId" id="existingImagePublicId" value="<%= post && post.imagePublicId ? post.imagePublicId : '' %>">
                                         <input type="hidden" name="imageRemoved" id="imageRemoved" value="false">
 
                                         <div id="imageUploadSection" style="display: none;">
-                                            <label for="image" class="form-label">Afbeelding (optioneel)</label>
-                                            <input type="file" class="form-control" id="image" name="image"
+                                            <input type="file" class="form-control mx-auto" id="image" name="image"
                                                 accept="image/jpeg,image/png,image/webp">
-                                            <div class="form-text">Max 5MB - JPG, PNG of WEBP</div>
+                                            <div class="form-text">( Max 5MB - JPG, PNG of WEBP )</div>
                                         </div>
 
                                         <div id="imageDisplaySection" style="display: none;">
-                                            <label class="form-label d-block mb-3">Huidige Afbeelding</label>
+                                            <label class="form-label d-block mb-3">Huidige afbeelding</label>
                                             <img id="previewImage" alt="Huidige afbeelding"
-                                                class="img-thumbnail d-block mb-3"
-                                                style="max-width: 200px; height: auto;">
+                                                class="img-thumbnail d-block mb-3 mx-auto"
+                                                style="max-width: 200px; max-height: 200px;">
 
-                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                            <button type="button" class="btn btn-sm btn-outline-danger mx-auto"
                                                 id="btnRemoveImage">
                                                 <i class="bi bi-trash me-1"></i> Verwijderen
                                             </button>
                                         </div>
 
                                     </div>
+
+                                    <!-- Inhoud -->
                                     <div class="mb-3">
                                         <label for="description"
                                             class="form-label d-flex justify-content-between align-items-center">
@@ -70,11 +76,10 @@
                                     </div>
 
                                     <div class="d-flex gap-2">
-                                        <a href="/nieuws" class="btn btn-secondary flex-grow-1">
-                                            <i class="bi bi-x-circle"></i> Annuleren
+                                        <a href="/nieuws/?page=<%= returnPage %>" class="btn btn-secondary flex-grow-1">
+                                            Annuleren
                                         </a>
                                         <button type="submit" class="btn btn-primary flex-grow-1">
-                                            <i class="bi bi-check-circle"></i>
                                             <%= post ? 'Opslaan' : 'Publiceer' %>
                                         </button>
                                     </div>

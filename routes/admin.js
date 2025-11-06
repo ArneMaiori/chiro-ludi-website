@@ -5,7 +5,7 @@ const cloudinary = require('../config/cloudinary');
 
 const Config = require('../models/Config');
 
-const { uploadBufferToCloudinary } = require('../utils/uploadToCloudinary');
+const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../utils/cloudinary');
 const isAdmin = require('../middleware/isAdmin');
 
 /// ---------- Configurations ---------- ///
@@ -44,53 +44,39 @@ router.post('/hero-config', isAdmin, upload.single('image'), async (req, res) =>
 
   try {
     let newImageUrl = null;
-    let newPublicId = null;
-
-    // Functie om de oude afbeelding te verwijderen
-    const deleteOldImage = async (publicId) => {
-      if (publicId) {
-        try {
-          await cloudinary.uploader.destroy(publicId);
-        } catch (err) {
-          console.error('Fout bij verwijderen oude Cloudinary afbeelding:', err);
-        }
-      }
-    };
+    let newImagePublicId = null;
 
     // Oude afbeelding verwijderen en nieuwe uploaden
     if (req.file && req.file.buffer) {
-      await deleteOldImage(existingImagePublicId);
+      await deleteImageFromCloudinary(existingImagePublicId);
 
       const result = await uploadBufferToCloudinary(req.file.buffer, 'chiro/hero-images');
       newImageUrl = result.secure_url;
-      newPublicId = result.public_id;
+      newImagePublicId = result.public_id;
     }
     // Verwijder image, pak default image
     else if (imageRemoved === 'true') {
-      await deleteOldImage(existingImagePublicId);
+      await deleteImageFromCloudinary(existingImagePublicId);
       newImageUrl = null;
-      newPublicId = null;
+      newImagePublicId = null;
     }
     // Niks gewijzigd
     else {
       return res.redirect(`/${pageKey === 'home' ? '' : pageKey}`);
     }
 
-    // Updaten in de database
+    // Update database
     await Config.findOneAndUpdate(
-      { pageKey: pageKey },
+      {pageKey: pageKey},
       {
         $set: {
           heroImageUrl: newImageUrl,
-          heroImagePublicId: newPublicId,
-        },
-        $setOnInsert: { pageKey: pageKey }
-      },
+          heroImagePublicId: newImagePublicId},
+        $setOnInsert: {pageKey: pageKey} },
       {
         upsert: true,
         new: true,
-        runValidators: true
-      }
+        runValidators: true}
     );
 
     res.redirect(`/${pageKey === 'home' ? '' : pageKey}`);

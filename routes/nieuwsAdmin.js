@@ -4,7 +4,7 @@ const multer = require('multer');
 
 const Nieuws = require('../models/Nieuws');
 
-const { uploadBufferToCloudinary } = require('../utils/uploadToCloudinary'); 
+const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../utils/cloudinary');
 const isAdmin = require('../middleware/isAdmin');
 
 
@@ -27,7 +27,7 @@ const upload = multer({
 router.get('/create', isAdmin, (req, res) => {
     const returnPage = req.query.page || 1;
 
-    res.render('pages/nieuws_create', {
+    res.render('pages/nieuws_editor', {
         activePage: 'nieuws',
         isAdmin: req.session.isAdmin,
         post: null,
@@ -44,16 +44,19 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
         if (!title || !description) return res.status(400).send('Vul titel en inhoud in');
 
         let imageUrl;
+        let imagePublicId;
         if (req.file && req.file.buffer) {
             const result = await uploadBufferToCloudinary(req.file.buffer, 'chiro/nieuws');
             imageUrl = result.secure_url;
+            imagePublicId = result.public_id;
         }
 
         const nieuws = new Nieuws({
             title: title.trim(),
             date: new Date(),
             description,
-            imageUrl
+            imageUrl,
+            imagePublicId
         });
         await nieuws.save();
 
@@ -73,7 +76,7 @@ router.get('/edit/:id', isAdmin, async (req, res) => {
 
         const returnPage = req.query.page || 1;
 
-        res.render('pages/nieuws_create', {
+        res.render('pages/nieuws_editor', {
             activePage: 'nieuws',
             isAdmin: true,
             post,
@@ -88,27 +91,36 @@ router.get('/edit/:id', isAdmin, async (req, res) => {
 // POST /nieuws/admin/edit/:id - Update bestaande post
 router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
     try {
-        const { title, description, existingImageUrl } = req.body;
+        const { title, description, existingImageUrl, existingImagePublicId, imageRemoved } = req.body;
         const id = req.params.id;
         const returnPage = req.body.returnPage || 1;
 
-        let imageUrl = existingImageUrl; 
-        
-        // Verwijder afbeelding
+        let imageUrl = existingImageUrl;
+        let imagePublicId = existingImagePublicId;
+        // Oude afbeelding verwijderen en nieuwe uploaden
         if (req.file && req.file.buffer) {
+            await deleteImageFromCloudinary(existingImagePublicId);
+
             const result = await uploadBufferToCloudinary(req.file.buffer, 'chiro/nieuws');
             imageUrl = result.secure_url;
+            imagePublicId = result.public_id;
+        }
+        // Verwijder image
+        else if (imageRemoved === 'true') {
+            await deleteImageFromCloudinary(existingImagePublicId);
+            imageUrl = null;
+            imagePublicId = null;
         }
 
-        // Nieuwe afbeelding uploaden
+        // Update database
         const updatedNieuws = {
             title: title.trim(),
             description,
-            imageUrl
+            imageUrl,
+            imagePublicId
         };
-
         await Nieuws.findByIdAndUpdate(id, updatedNieuws, { new: true, runValidators: true });
-        
+
         res.redirect(`/nieuws?page=${returnPage}`);
     } catch (err) {
         console.error(err);
@@ -119,9 +131,13 @@ router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
 // POST /nieuws/admin/delete/:id - Verwijder post
 router.post('/delete/:id', isAdmin, async (req, res) => {
     try {
+        const { existingImagePublicId } = req.body;
         const returnPage = req.body.page || 1;
 
+        // Verwijder image van Cloudinary en daarna de post
+        await deleteImageFromCloudinary(existingImagePublicId);
         await Nieuws.findByIdAndDelete(req.params.id);
+
         res.redirect(`/nieuws?page=${returnPage}`);
     } catch (err) {
         console.error(err);

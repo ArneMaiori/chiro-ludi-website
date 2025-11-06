@@ -1,0 +1,95 @@
+/* Meer nieuws -> */
+.more-news-link {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #0d6efd;
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-block;
+}
+
+.more-news-link:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* Acties widget (carousel) */
+.acties-widget {
+  min-height: 200px;
+  overflow: hidden;
+  position: relative;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+.acties-widget .carousel-item {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+}
+
+.acties-widget .carousel-inner {
+  min-height: 180px;
+}
+
+.acties-widget h5 {
+  color: #dc3545;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1) grayscale(100);
+}
+
+/* Social media widget container */
+.socials {
+  background: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.socials h2 {
+  font-size: 1.5rem;
+}
+
+/* Socials Widget Button Styling */
+.btn-social-facebook,
+.btn-social-instagram {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.btn-social-facebook:hover,
+.btn-social-instagram:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Facebook */
+.btn-social-facebook {
+    background-color: #1877f2;
+}
+.btn-social-facebook:hover {
+    background-color: #145dbf;
+}
+
+/* Instagram */
+.btn-social-instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    border: none;
+}
+.btn-social-instagram:hover {
+    opacity: 0.9;
+}

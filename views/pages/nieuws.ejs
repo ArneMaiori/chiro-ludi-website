@@ -52,6 +52,7 @@
 
                           <form method="POST" action="/nieuws/admin/delete/<%= n._id %>?page=<%= current %>" class="d-inline"
                             onsubmit="return confirm('Weet je zeker dat je deze post wilt verwijderen?');">
+                            <input type="hidden" name="existingImagePublicId" value="<%= n.imagePublicId %>">
                             <button type="submit" class="btn btn-sm btn-outline-danger">
                               <i class="bi bi-trash"></i>
                             </button>

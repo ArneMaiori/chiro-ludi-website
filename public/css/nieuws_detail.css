@@ -1,0 +1,18 @@
+.news-detail {
+  line-height: 1.7;
+}
+
+.news-detail .detail-image {
+  max-width: 30%;
+  height: auto;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .news-detail .detail-image {
+    float: none;
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+  }
+}

@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     page = parseInt(req.query.page); // nieuws pagina index
 
     // Zorg ervoor dat de pagina index in range blijft
-    if (page < 1) {
+    if (page < 1 || !page) {
       page = 1;
     } else if (page > pages && pages > 0) {
       page = pages;
