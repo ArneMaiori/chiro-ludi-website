@@ -8,6 +8,8 @@ const nodemailer = require('nodemailer');
 const nieuwsRouter = require('./routes/nieuws');
 const adminRouter = require('./routes/admin');
 const nieuwsAdminRouter = require('./routes/nieuwsAdmin');
+const leidingRouter = require('./routes/leiding');
+const leidingAdminRouter = require('./routes/leidingAdmin');
 
 const pageConfigMiddleware = require('./middleware/pageConfig');
 
@@ -114,6 +116,8 @@ app.use('/nieuws', nieuwsRouter);
 app.use('/admin', adminRouter);
 app.use('/nieuws/admin', nieuwsAdminRouter);
 app.use('/admin', adminRouter);
+app.use('/leiding', leidingRouter);
+app.use('/leiding/admin', leidingAdminRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

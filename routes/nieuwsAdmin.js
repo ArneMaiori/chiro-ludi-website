@@ -20,11 +20,12 @@ const upload = multer({
         else cb(new Error('Alleen JPG/PNG/WEBP toegestaan'));
     }
 });
+router.use(isAdmin); 
 
 
 /// ---------- Nieuws Admin Routes ---------- ///
 // GET /nieuws/admin/create - Open aanmaak formulier
-router.get('/create', isAdmin, (req, res) => {
+router.get('/create', (req, res) => {
     const returnPage = req.query.page || 1;
 
     res.render('pages/nieuws_editor', {
@@ -36,7 +37,7 @@ router.get('/create', isAdmin, (req, res) => {
 });
 
 // POST /nieuws/admin - Upload nieuwe post
-router.post('/', isAdmin, upload.single('image'), async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
     try {
         const { title, description } = req.body;
         const returnPage = req.body.returnPage || 1;
@@ -68,7 +69,7 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
 });
 
 // GET /nieuws/admin/edit/:id - Open edit formulier
-router.get('/edit/:id', isAdmin, async (req, res) => {
+router.get('/edit/:id', async (req, res) => {
     try {
         let post = await Nieuws.findById(req.params.id);
         if (!post) return res.status(404).redirect('/nieuws');
@@ -89,7 +90,7 @@ router.get('/edit/:id', isAdmin, async (req, res) => {
 });
 
 // POST /nieuws/admin/edit/:id - Update bestaande post
-router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
+router.post('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const { title, description, existingImageUrl, existingImagePublicId, imageRemoved } = req.body;
         const id = req.params.id;
@@ -129,7 +130,7 @@ router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
 });
 
 // POST /nieuws/admin/delete/:id - Verwijder post
-router.post('/delete/:id', isAdmin, async (req, res) => {
+router.post('/delete/:id', async (req, res) => {
     try {
         const { existingImagePublicId } = req.body;
         const returnPage = req.body.page || 1;

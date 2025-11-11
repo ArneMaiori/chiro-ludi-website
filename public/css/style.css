@@ -127,3 +127,24 @@ main h2 {
 .alert-info h4 {
   color: #0c5460;
 }
+
+
+
+.separator-line {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+}
+
+.separator-line img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  user-select: none;
+  pointer-events: none;
+}

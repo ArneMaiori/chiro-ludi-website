@@ -1,0 +1,66 @@
+/* Stijl voor de leiding groepen sectie */
+.leiding-group {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.leiding-group.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Afwisselende scroll-effecten */
+/* Oneven index: komt van rechts */
+.leiding-group.right-aligned {
+    transform: translateX(50px);
+}
+.leiding-group.right-aligned.visible {
+    transform: translateX(0);
+}
+
+/* Even index: komt van links */
+.leiding-group.left-aligned {
+    transform: translateX(-50px);
+}
+.leiding-group.left-aligned.visible {
+    transform: translateX(0);
+}
+
+/* Stijl voor de leiding kaarten */
+.leiding-card {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Gebruik de Chiro-stijlen gedefinieerd in style.css, bijv. text-danger voor Chiro-rood */
+}
+
+.leiding-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.leiding-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid #dc3545; /* Chiro rood accent */
+    border-radius: 50%;
+}
+
+.group-title {
+    color: #212529;
+    font-weight: 700;
+    border-bottom: 2px solid #dc3545; 
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+/* Modal afbeelding */
+.modal-leiding-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 4px solid #dc3545;
+    border-radius: 50%;
+}
+/* Zorg dat de modal header tekst wit is, bijv. door een Bootstrap-class toe te voegen aan de modal header in EJS */
