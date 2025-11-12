@@ -24,7 +24,9 @@ router.get('/editor', isAdmin, async (req, res) => {
         res.render('pages/leiding_editor', {
             activePage: 'leiding',
             isAdmin: true,
-            leidingList
+            leidingList,
+            groups: Leiding.GROUPS || [],
+            selectedId: req.query.selected ? String(req.query.selected) : null
         });
     } catch (err) {
         console.error('Fout bij het ophalen van leiding:', err);
@@ -35,10 +37,14 @@ router.get('/editor', isAdmin, async (req, res) => {
 // routes/leidingAdmin.js - POST / route aanpassen
 router.post('/', isAdmin, upload.single('image'), async (req, res) => {
     try {
-        const { name, phone, email, bio, isHoofdleiding } = req.body;
+        const { name, phone, email, bio, group, isHoofdleiding } = req.body;
 
-        if (!name || !phone || !email || !bio) {
+        if (!name || !phone || !email || !bio || !group) {
             return res.status(400).send('Vul alle verplichte velden in');
+        }
+
+        if (Leiding.GROUPS && !Leiding.GROUPS.includes(group)) {
+            return res.status(400).send('Ongeldige groep geselecteerd');
         }
 
         let imageUrl = null;
@@ -54,35 +60,55 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
             phone: phone.trim(),
             email: email.trim(),
             bio: bio.trim(),
+            group,
             isHoofdleiding: isHoofdleiding === 'on',
             imageUrl,
             imagePublicId
         });
-        await leiding.save();
+        const savedLeiding = await leiding.save();
 
-        res.redirect('/leiding/admin/editor');
+        res.redirect(`/leiding/admin/editor?selected=${savedLeiding._id.toString()}`);
     } catch (err) {
         console.error(err);
         res.status(500).send('Leiding aanmaken mislukt.');
     }
 });
 
+// POST /edit/:id - Edit leidings data en sla op
 router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
     try {
-        const { name, phone, email, bio, isHoofdleiding, existingImageUrl, existingImagePublicId, imageRemoved } = req.body;
+        const {
+            name,
+            phone,
+            email,
+            bio,
+            group,
+            isHoofdleiding,
+            existingImageUrl,
+            existingImagePublicId,
+            imageRemoved
+        } = req.body;
         const id = req.params.id;
+
+        if (!group || (Leiding.GROUPS && !Leiding.GROUPS.includes(group))) {
+            return res.status(400).send('Ongeldige groep geselecteerd');
+        }
 
         let imageUrl = existingImageUrl;
         let imagePublicId = existingImagePublicId;
 
         if (req.file && req.file.buffer) {
-            await deleteImageFromCloudinary(existingImagePublicId);
-            
+            if (existingImagePublicId) {
+                await deleteImageFromCloudinary(existingImagePublicId);
+            }
+
             const result = await uploadBufferToCloudinary(req.file.buffer, 'chiro/leiding');
             imageUrl = result.secure_url;
             imagePublicId = result.public_id;
         } else if (imageRemoved === 'true') {
-            await deleteImageFromCloudinary(existingImagePublicId);
+            if (existingImagePublicId) {
+                await deleteImageFromCloudinary(existingImagePublicId);
+            }
             imageUrl = null;
             imagePublicId = null;
         }
@@ -92,13 +118,14 @@ router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
             phone: phone.trim(),
             email: email.trim(),
             bio: bio.trim(),
+            group,
             isHoofdleiding: isHoofdleiding === 'on',
             imageUrl,
             imagePublicId
         };
         await Leiding.findByIdAndUpdate(id, updatedLeiding, { new: true, runValidators: true });
 
-        res.redirect('/leiding/admin/editor');
+        res.redirect(`/leiding/admin/editor?selected=${id}`);
     } catch (err) {
         console.error(err);
         res.status(500).send('Leiding updaten mislukt.');

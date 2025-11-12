@@ -13,4 +13,7 @@ const leidingSchema = new mongoose.Schema({
     imagePublicId: {type: String, default: null}
 });
 
-module.exports = mongoose.model('Leiding', leidingSchema);
+const Leiding = mongoose.model('Leiding', leidingSchema);
+
+module.exports = Leiding;
+module.exports.GROUPS = GROUPS;

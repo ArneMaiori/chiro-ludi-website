@@ -15,6 +15,7 @@ const pageConfigMiddleware = require('./middleware/pageConfig');
 
 const Nieuws = require('./models/Nieuws');
 const Config = require('./models/Config');
+const Leiding = require('./models/Leiding');
 
 /// ---------- Configurations ---------- ///
 const app = express();
@@ -68,9 +69,20 @@ app.get('/', async (req, res) => {
 
 // GET /contact - Contact pagina
 app.get('/contact', async (req, res) => {
+    let hoofdleidingen = [];
+
+    try {
+        hoofdleidingen = await Leiding.find({ isHoofdleiding: true })
+            .sort({ name: 1 })
+            .select('name phone email imageUrl');
+    } catch (err) {
+        console.error('Error fetching hoofdleiding:', err);
+    }
+
     res.render('pages/contact', {
         isAdmin: req.session.isAdmin || false,
         activePage: 'contact',
+        hoofdleidingen,
     });
 });
 

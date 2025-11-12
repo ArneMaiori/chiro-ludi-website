@@ -12,21 +12,22 @@
                         <div class="card shadow">
                             <div
                                 class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">Huidige Leiding</h4>
+                                <h4 class="mb-0">Huidige leiding</h4>
                                 <button type="button" class="btn btn-light btn-sm" id="btnAddNew">
                                     <i class="bi bi-plus-lg"></i>
                                 </button>
                             </div>
                             <div class="card-body p-0">
                                 <% if (leidingList && leidingList.length> 0) { %>
-                                    <div class="list-group list-group-flush" id="leidingList">
+                                    <div class="list-group list-group-flush" id="leidingList" data-selected-id="<%= selectedId || '' %>">
                                         <% leidingList.forEach(l=> { %>
-                                            <a href="#" class="list-group-item list-group-item-action leiding-item"
+                                            <a href="#" class="list-group-item list-group-item-action leiding-item<%= selectedId && selectedId === l._id.toString() ? ' active' : '' %>"
                                                 data-id="<%= l._id %>" 
                                                 data-name="<%= l.name %>"
                                                 data-phone="<%= l.phone %>" 
                                                 data-email="<%= l.email %>"
                                                 data-bio="<%= l.bio %>" 
+                                                data-group="<%= l.group || '' %>"
                                                 data-image-url="<%= l.imageUrl || '' %>"
                                                 data-is-hoofdleiding="<%= l.isHoofdleiding %>"
                                                 data-image-public-id="<%= l.imagePublicId || '' %>">
@@ -46,7 +47,7 @@
                                                                         <%= l.name %>
                                                                     </h6>
                                                                     <small class="text-muted">
-                                                                        <%= l.email %>
+                                                                        <%= l.group || 'Onbekend' %> • <%= l.email %>
                                                                     </small>
                                                                 </div>
                                                 </div>
@@ -78,6 +79,17 @@
                                         <label for="name" class="form-label">Naam *</label>
                                         <input type="text" class="form-control" id="name" name="name" required
                                             placeholder="">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="group" class="form-label">Groep *</label>
+                                        <select class="form-select" id="group" name="group" required>
+                                            <% if (Array.isArray(groups) && groups.length) { %>
+                                                <% groups.forEach(group => { %>
+                                                    <option value="<%= group %>"><%= group %></option>
+                                                <% }); %>
+                                            <% } %>
+                                        </select>
                                     </div>
 
                                     <div class="mb-3">

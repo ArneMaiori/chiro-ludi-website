@@ -16,3 +16,58 @@
     color: #0a58ca;
     text-decoration: underline;
 }
+
+.hoofdleiding-card {
+    border-radius: 0.75rem;
+}
+
+.hoofdleiding-card-body {
+    min-height: 140px;
+}
+
+.hoofdleiding-info p:last-child {
+    margin-bottom: 0;
+}
+
+.hoofdleiding-image-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 90px;
+}
+
+.hoofdleiding-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hoofdleiding-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2.35rem;
+    background-color: #6c757d;
+    color: #ffffff;
+    border-radius: 50%;
+}
+
+@media (max-width: 575.98px) {
+    .hoofdleiding-card-body {
+        min-height: 0;
+        text-align: center;
+    }
+
+    .hoofdleiding-image-wrapper {
+        flex: 0 0 72px;
+        width: 72px;
+        height: 72px;
+    }
+}
