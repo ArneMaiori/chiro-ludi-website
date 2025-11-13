@@ -59,6 +59,14 @@
     border-radius: 50%;
 }
 
+.hoofdleiding-map-column .card-body {
+    overflow: hidden;
+}
+
+.hoofdleiding-map-column iframe {
+    display: block;
+}
+
 @media (max-width: 575.98px) {
     .hoofdleiding-card-body {
         min-height: 0;

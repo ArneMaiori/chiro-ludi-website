@@ -7,10 +7,13 @@ body {
   display: flex;
   flex-direction: column;
   background: #f3f4f6;
+  margin-top: 60px !important;
 }
 
 main {
   flex: 1;
+  margin-top: 15px !important;
+  margin-bottom: 30px !important;
 }
 
 footer {
@@ -75,8 +78,8 @@ footer {
   overflow: hidden;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+
 
 .text-section {
   flex: 1;
@@ -112,10 +115,6 @@ footer {
 /* === Andere === */
 /* ============== */
 
-/* Card basisstijl */
-.card {
-  border: 1px solid #dee2e6;
-}
 
 /* Algemene H2 titels in main */
 main h2 {

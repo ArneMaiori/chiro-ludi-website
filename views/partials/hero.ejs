@@ -1,72 +1,73 @@
 <link rel="stylesheet" href="/css/hero.css">
 
-<%
-    const DEFAULT_URL = 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1759244464/GebouwChiro_rmjnjp.jpg';
-    const heroImage = pageConfig && pageConfig.heroImageUrl ? pageConfig.heroImageUrl : DEFAULT_URL;
-    
-    const isDefault = heroImage === DEFAULT_URL;
-%>
+<% const DEFAULT_URL='https://res.cloudinary.com/dph1xlgfc/image/upload/v1759244464/GebouwChiro_rmjnjp.jpg' ; const
+    heroImage=pageConfig && pageConfig.heroImageUrl ? pageConfig.heroImageUrl : DEFAULT_URL; const
+    isDefault=heroImage===DEFAULT_URL; %>
 
-<section class="hero" style="background-image: url('<%= heroImage %>');">
-    <h1><%= title %></h1>
+    <section class="hero" style="background-image: url('<%= heroImage %>');">
+        <h1>
+            <%= title %>
+        </h1>
 
-    <% if (isAdmin) { %>
-        <button type="button" class="btn btn-warning btn-sm position-absolute bottom-0 end-0 m-3 shadow" 
-                data-bs-toggle="modal" 
-                data-bs-target="#heroEditModal" 
-                data-page-key="<%= activePage %>"
-                data-current-url="<%= heroImage %>"
-                data-is-default="<%= isDefault %>"
+        <% if (isAdmin) { %>
+            <button type="button" class="btn btn-warning btn-sm position-absolute top-0 end-0 m-3 shadow"
+                data-bs-toggle="modal" data-bs-target="#heroEditModal" data-page-key="<%= activePage %>"
+                data-current-url="<%= heroImage %>" data-is-default="<%= isDefault %>"
                 data-current-public-id="<%= pageConfig && pageConfig.heroImagePublicId ? pageConfig.heroImagePublicId : '' %>"
                 title="Afbeelding bewerken">
-            <i class="bi bi-pencil-square me-1"></i> Afbeelding
-        </button>
-    <% } %>
-</section>
+                <i class="bi bi-pencil-square me-1"></i>
+            </button>
+            <% } %>
+    </section>
 
 
-<div class="modal fade" id="heroEditModal" tabindex="-1" aria-labelledby="heroEditModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="heroEditModalLabel">Afbeelding bewerken</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+    <div class="modal fade" id="heroEditModal" tabindex="-1" aria-labelledby="heroEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="heroEditModalLabel">Afbeelding wijzigen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+                </div>
+
+                <form id="heroImageForm" method="POST" action="/admin/hero-config" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p class="alert alert-info small mb-3">Wijzig de achtergrondafbeelding voor de <%= pageKey %>
+                                pagina.</p>
+
+                        <input type="hidden" name="pageKey" id="modalPageKey">
+                        <input type="hidden" name="existingImageUrl" id="modalExistingImageUrl">
+                        <input type="hidden" name="existingImagePublicId" id="modalExistingImagePublicId">
+                        <input type="hidden" name="imageRemoved" id="modalImageRemoved" value="false">
+
+                        <div id="modalImageDisplaySection" class="text-center mb-3 p-3 border rounded">
+                            <label class="form-label d-block"><span id="currentImageLabel">Huidige afbeelding</span></label>
+                            <img id="modalPreviewImage" src="" alt="Huidige afbeelding" class="img-fluid mb-3 rounded"
+                                style="max-height: 200px;">
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-danger" id="modalBtnRemoveImage" style="display: none;">
+                                    <i class="bi bi-trash me-1"></i> Verwijderen
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr class="my-3">
+
+                        <div id="modalImageUploadSection">
+                            <label for="newImage" class="form-label">Nieuwe afbeelding (PNG, JPG, WEBP)</label>
+                            <input type="file" class="form-control" id="newImage" name="image"
+                                accept="image/jpeg,image/png,image/webp">
+                            <div class="form-text">Max 5MB.</div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" id="modalBtnClose"
+                            data-bs-dismiss="modal">Annuleren</button>
+                        <button type="submit" class="btn btn-primary">Opslaan</button>
+                    </div>
+                </form>
             </div>
-            
-            <form id="heroImageForm" method="POST" action="/admin/hero-config" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <p class="alert alert-info small mb-3">Wijzig de achtergrondafbeelding voor de <%= pageKey %> pagina.</p>
-                    
-                    <input type="hidden" name="pageKey" id="modalPageKey">
-                    <input type="hidden" name="existingImageUrl" id="modalExistingImageUrl">
-                    <input type="hidden" name="existingImagePublicId" id="modalExistingImagePublicId">
-                    <input type="hidden" name="imageRemoved" id="modalImageRemoved" value="false">
-
-                    <div id="modalImageDisplaySection" class="text-center mb-3 p-3 border rounded">
-                        <label class="form-label d-block"><span id="currentImageLabel">Huidige afbeelding</span></label>
-                        <img id="modalPreviewImage" src="" alt="Huidige afbeelding" class="img-fluid mb-3 rounded" style="max-height: 200px;">
-                        
-                        <button type="button" class="btn btn-sm btn-outline-danger" id="modalBtnRemoveImage" style="display: none;">
-                            <i class="bi bi-trash me-1"></i> Verwijderen
-                        </button>
-                    </div>
-                   
-                    <hr class="my-3">
-
-                    <div id="modalImageUploadSection">
-                        <label for="newImage" class="form-label">Nieuwe afbeelding (PNG, JPG, WEBP)</label>
-                        <input type="file" class="form-control" id="newImage" name="image" accept="image/jpeg,image/png,image/webp">
-                        <div class="form-text">Max 5MB.</div>
-                    </div>
-
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" id="modalBtnClose" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="submit" class="btn btn-primary">Opslaan</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
-<script src="/js/hero-editor.js"></script>
+    <script src="/js/hero-editor.js"></script>

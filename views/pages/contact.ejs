@@ -10,148 +10,139 @@
 
             <%- include('../partials/hero', { title: 'Contact' , pageKey: 'contact' }) %>
 
-                <main class="container my-5">
+                <main class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-10">
 
                             <div class="row g-4">
-                                <% 
-                                    const hoofdleidingCount = Array.isArray(hoofdleidingen) ? hoofdleidingen.length : 0;
-                                    const estimatedCardHeight = 200;
-                                    const estimatedGap = 16;
-                                    const minCardCount = 2;
-                                    const effectiveCount = Math.max(hoofdleidingCount, minCardCount);
-                                    const mapHeight = Math.max(
-                                        360,
-                                        (estimatedCardHeight * effectiveCount) + (estimatedGap * (effectiveCount - 1))
-                                    );
-                                %>
+                                <div class="col-md-6 hoofdleiding-column">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <h2 class="mb-0 me-3">Onze hoofdleiding</h2>
+                                        <% if (isAdmin) { %>
+                                            <a href="/leiding/admin/editor"
+                                                class="btn btn-sm btn-warning align-self-center"
+                                                title="Hoofdleiding beheren">
+                                                <i class="bi bi-gear-fill"></i>
+                                            </a>
+                                            <% } %>
+                                    </div>
 
-                                    <div class="col-md-6 hoofdleiding-column">
-                                        <div class="d-flex align-items-center mb-4">
-                                            <h2 class="mb-0 me-3">Onze Hoofdleiding</h2>
-
-                                            <% if (isAdmin) { %>
-                                                <a href="/leiding/admin/editor" class="btn btn-sm btn-warning align-self-center"
-                                                    title="Hoofdleiding beheren">
-                                                    <i class="bi bi-gear-fill"></i>
-                                                </a>
-                                                <% } %>
-                                        </div>
-
-                                        <div class="row g-3 hoofdleiding-list">
-                                            <% if (hoofdleidingCount> 0) { %>
-                                                <% hoofdleidingen.forEach((leiding)=> { %>
-                                                    <div class="col-12">
-                                                        <div class="card shadow-sm border-0 hoofdleiding-card">
-                                                            <div class="card-body d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 hoofdleiding-card-body">
-                                                                <div class="flex-grow-1 text-center text-sm-start hoofdleiding-info">
-                                                                    <h5 class="card-title text-danger mb-3">
-                                                                        <%= leiding.name %>
-                                                                    </h5>
-                                                                    <% if (leiding.phone) { 
-                                                                        const telHref = leiding.phone.replace(/\s+/g, '' ); 
-                                                                    %>
-                                                                        <p class="mb-1">
-                                                                            <i class="bi bi-telephone-fill me-2"></i>
-                                                                            <strong>Telefoon:</strong>
-                                                                            <a href="tel:<%= telHref %>">
-                                                                                <%= leiding.phone %>
-                                                                            </a>
-                                                                        </p>
+                                    <div class="row g-3 hoofdleiding-list">
+                                        <% if (Array.isArray(hoofdleidingen) && hoofdleidingen.length> 0) { %>
+                                            <% hoofdleidingen.forEach((leiding)=> { %>
+                                                <div class="col-12">
+                                                    <div class="card shadow border-0 hoofdleiding-card">
+                                                        <div
+                                                            class="card-body d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 hoofdleiding-card-body">
+                                                            <div
+                                                                class="flex-grow-1 text-center text-sm-start hoofdleiding-info">
+                                                                <h5 class="card-title text-danger mb-3">
+                                                                    <%= leiding.name %>
+                                                                </h5>
+                                                                <% if (leiding.phone) { const
+                                                                    telHref=leiding.phone.replace(/\s+/g, '' ); %>
+                                                                    <p class="mb-1">
+                                                                        <i class="bi bi-telephone-fill me-2"></i>
+                                                                        <strong>Telefoon:</strong>
+                                                                        <a href="tel:<%= telHref %>">
+                                                                            <%= leiding.phone %>
+                                                                        </a>
+                                                                    </p>
                                                                     <% } %>
-                                                                    <% if (leiding.email) { %>
-                                                                        <p class="mb-0">
-                                                                            <i class="bi bi-envelope-fill me-2"></i>
-                                                                            <strong>E-mail:</strong>
-                                                                            <a href="mailto:<%= leiding.email %>">
-                                                                                <%= leiding.email %>
-                                                                            </a>
-                                                                        </p>
-                                                                    <% } %>
-                                                                </div>
-                                                                <div class="hoofdleiding-image-wrapper">
-                                                                    <% if (leiding.imageUrl) { %>
-                                                                        <img src="<%= leiding.imageUrl %>" alt="Hoofdleiding <%= leiding.name %>">
+                                                                        <% if (leiding.email) { %>
+                                                                            <p class="mb-0">
+                                                                                <i class="bi bi-envelope-fill me-2"></i>
+                                                                                <strong>E-mail:</strong>
+                                                                                <a href="mailto:<%= leiding.email %>">
+                                                                                    <%= leiding.email %>
+                                                                                </a>
+                                                                            </p>
+                                                                            <% } %>
+                                                            </div>
+                                                            <div class="hoofdleiding-image-wrapper">
+                                                                <% if (leiding.imageUrl) { %>
+                                                                    <img src="<%= leiding.imageUrl %>"
+                                                                        alt="Hoofdleiding <%= leiding.name %>">
                                                                     <% } else { %>
                                                                         <div class="hoofdleiding-icon">
                                                                             <i class="bi bi-person-fill"></i>
                                                                         </div>
-                                                                    <% } %>
-                                                                </div>
+                                                                        <% } %>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <% }); %>
-                                                        <% } else { %>
-                                                            <div class="col-12">
-                                                                <p class="alert alert-info">Momenteel is er geen
-                                                                    hoofdleiding informatie beschikbaar.</p>
-                                                            </div>
-                                                            <% } %>
-                                        </div>
+                                                </div>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <div class="col-12">
+                                                            <p class="alert alert-info">Momenteel is er geen
+                                                                hoofdleiding informatie beschikbaar.</p>
+                                                        </div>
+                                                        <% } %>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-6 d-flex flex-column hoofdleiding-map-column">
-                                        <h2 class="mb-4">Waar vind je ons?</h2>
-                                        <div class="card shadow-sm border-0 flex-grow-1">
-                                            <div class="card-body p-0">
+                                <div class="col-md-6 d-flex flex-column hoofdleiding-map-column">
+                                    <h2 class="mb-4">Waar vind je ons?</h2>
+                                    <div class="card shadow border-0 flex-grow-1">
+                                        <div class="card-body p-0">
+                                            <% const cardCount = Array.isArray(hoofdleidingen) ? hoofdleidingen.length : 0; 
+                                               const mapHeights = { 2: 297, 3: 452 }; 
+                                               const mapHeight = mapHeights[cardCount] || 297; %>
                                                 <iframe
                                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2515.1313625669436!2d5.44533107685134!3d50.92128695335102!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c0df005f3f5929%3A0xa5e2ab3b684d1a67!2sChiro%20Ludi!5e0!3m2!1snl!2sbe!4v1762945786317!5m2!1snl!2sbe"
-                                                    id="contact-map"
-                                                    width="100%" height="<%= mapHeight %>"
-                                                    style="border:0; border-radius: 0.5rem; min-height: 320px;"
+                                                    id="contact-map" width="100%" height="<%= mapHeight %>"
+                                                    style="border:0; border-radius: 0.5rem;"
                                                     allowfullscreen="" loading="lazy"
                                                     referrerpolicy="no-referrer-when-downgrade">
                                                 </iframe>
-                                            </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-12 mt-4">
-                                        <div class="card shadow-lg border-0">
-                                            <div class="card-body p-4">
-                                                <h2 class="card-title mb-4">Stel een vraag</h2>
-                                                <p class="text-muted">
-                                                    Heb je een specifieke vraag over de werking, uren, inschrijvingen...?
-                                                    Stuur ons een bericht!
-                                                </p>
-                                                <form action="/submit-contact" method="POST">
-                                                    <div class="row g-3">
-                                                        <div class="col-md-6">
-                                                            <label for="naam" class="form-label">Naam *</label>
-                                                            <input type="text" class="form-control" id="naam"
-                                                                name="naam" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label for="email" class="form-label">E-mailadres *</label>
-                                                            <input type="email" class="form-control" id="email"
-                                                                name="email" required>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="onderwerp" class="form-label">Onderwerp</label>
-                                                            <input type="text" class="form-control" id="onderwerp"
-                                                                name="onderwerp">
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <label for="bericht" class="form-label">Je Bericht *</label>
-                                                            <textarea class="form-control" id="bericht" name="bericht"
-                                                                rows="5" required></textarea>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <button type="submit" class="btn btn-primary">Verstuur
-                                                                bericht</button>
-                                                        </div>
+                                <div class="col-12 mt-4">
+                                    <div class="card shadow-lg border-0">
+                                        <div class="card-body p-4">
+                                            <h2 class="card-title mb-4">Stel een vraag</h2>
+                                            <p class="text-muted">
+                                                Heb je een specifieke vraag over de werking, uren, inschrijvingen...?
+                                                Stuur ons een bericht!
+                                            </p>
+                                            <form action="/submit-contact" method="POST">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label for="naam" class="form-label">Naam *</label>
+                                                        <input type="text" class="form-control" id="naam" name="naam"
+                                                            required>
                                                     </div>
-                                                </form>
-                                            </div>
+                                                    <div class="col-md-6">
+                                                        <label for="email" class="form-label">E-mailadres *</label>
+                                                        <input type="email" class="form-control" id="email" name="email"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="onderwerp" class="form-label">Onderwerp</label>
+                                                        <input type="text" class="form-control" id="onderwerp"
+                                                            name="onderwerp">
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="bericht" class="form-label">Je vraag *</label>
+                                                        <textarea class="form-control" id="bericht" name="bericht"
+                                                            rows="5" required></textarea>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <button type="submit" class="btn btn-primary">Verstuur
+                                                            bericht</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </main>
-                <script src="/js/contact.js"></script>
                 <%- include('../partials/footer') %>
     </body>
 
