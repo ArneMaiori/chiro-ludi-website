@@ -21,6 +21,9 @@ const upload = multer({
 router.get('/editor', isAdmin, async (req, res) => {
     try {
         const leidingList = await Leiding.find().sort({ name: 1 });
+        leidingList.sort((a, b) => {
+            return Leiding.GROUPS.indexOf(a.group) - Leiding.GROUPS.indexOf(b.group);
+        })
         res.render('pages/leiding_editor', {
             activePage: 'leiding',
             isAdmin: true,

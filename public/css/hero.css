@@ -8,7 +8,6 @@
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
   position: relative;
-  overflow: hidden;
 }
 
 .hero h1 {
@@ -30,6 +29,10 @@
   background-position: bottom;
   z-index: 1;
   pointer-events: none;
+}
+
+.hero--leiding::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23fbe8ff' d='M0,80 C90,90 180,60 270,75 C360,90 450,100 540,80 C630,60 720,100 810,85 C900,70 990,90 1080,75 C1170,60 1260,85 1350,80 C1400,78 1440,85 1440,85 V120 H0 Z'/%3E%3C/svg%3E");
 }
 
 @media (max-width: 768px) {

@@ -1,66 +1,330 @@
-/* Stijl voor de leiding groepen sectie */
-.leiding-group {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+body {
+    background-color: #f5f5f5 !important;
+    margin-top: 0 !important;
 }
 
-.leiding-group.visible {
-    opacity: 1;
-    transform: translateY(0);
+main {
+    margin-top: 0 !important;
 }
 
-/* Afwisselende scroll-effecten */
-/* Oneven index: komt van rechts */
-.leiding-group.right-aligned {
-    transform: translateX(50px);
-}
-.leiding-group.right-aligned.visible {
-    transform: translateX(0);
+.leiding-main {
+    padding-top: 0 !important;
+    margin-top: -5px; 
+    position: relative;
+    z-index: 2;
 }
 
-/* Even index: komt van links */
-.leiding-group.left-aligned {
-    transform: translateX(-50px);
-}
-.leiding-group.left-aligned.visible {
-    transform: translateX(0);
+.edit-leiding {
+    background-color:  #fbe8ff !important;
+    margin-bottom: 0;
+    border: none;
 }
 
-/* Stijl voor de leiding kaarten */
+.leiding-section {
+    position: relative;
+    background-color: var(--section-background, #ffffff);
+    padding-bottom: 30px;
+}
+
+.leiding-section + .leiding-section {
+    margin-top: -1px;
+}
+
+.leiding-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.leiding-header {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    text-transform: uppercase;
+}
+
+.leiding-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.25rem;
+    color: var(--title-color, #1e1e1e);
+}
+
+.leiding-subtitle {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: rgba(0, 0, 0, 0.65);
+    margin: 0;
+}
+
+.leiding-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1rem, 2vw, 2rem);
+    justify-content: flex-start;
+}
+
+.leiding-section.align-right .leiding-header {
+    text-align: right;
+}
+
+.leiding-section.align-right .leiding-grid {
+    justify-content: flex-end;
+}
+
+.leiding-section.align-left .leiding-header {
+    text-align: left;
+}
+
+.leiding-section.align-left .leiding-grid {
+    justify-content: flex-start;
+}
+
+.leiding-section.align-center .leiding-header {
+    text-align: center;
+}
+
+.leiding-section.align-center .leiding-grid {
+    justify-content: center;
+}
+
 .leiding-card {
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Gebruik de Chiro-stijlen gedefinieerd in style.css, bijv. text-danger voor Chiro-rood */
+    flex: 1 1 clamp(160px, 22vw, 240px);
+    max-width: clamp(180px, 25vw, 260px);
+    min-height: clamp(240px, 30vw, 320px);
+    perspective: 1100px;
 }
 
-.leiding-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+.leiding-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
 }
 
-.leiding-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border: 3px solid #dc3545; /* Chiro rood accent */
+.leiding-card:hover .leiding-card-inner,
+.leiding-card.flipped .leiding-card-inner { 
+    transform: rotateY(180deg);
+}
+
+.leiding-card-front,
+.leiding-card-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    border: 3px solid var(--group-color, #e53935);
+}
+
+.leiding-card-back {
+    background: linear-gradient(135deg, #c62828, #e53935);
+    color: #ffffff;
+    transform: rotateY(180deg);
+    text-align: left;
+    padding: 1.25rem;
+    overflow-y: auto;
+    pointer-events: none;
+}
+
+.leiding-card.flipped .leiding-card-back {
+    pointer-events: auto;
+}
+
+.leiding-card-back::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 6px;
+}
+
+.leiding-card-back::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    margin: 10px 0;
+}
+
+.leiding-card-back::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 3px;
+}
+
+.contact-item a:not(.btn) {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500 !important;
+}
+
+.contact-item a:not(.btn):hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.leiding-photo,
+.leiding-photo-placeholder {
+    width: clamp(110px, 10vw, 160px);
+    height: clamp(110px, 10vw, 160px);
     border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--group-color, #e53935);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
 }
 
-.group-title {
-    color: #212529;
+.leiding-photo-placeholder {
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leiding-photo-placeholder i {
+    font-size: 3.5rem;
+    color: rgba(0, 0, 0, 0.25);
+}
+
+.leiding-name {
+    margin-top: 1.25rem;
     font-weight: 700;
-    border-bottom: 2px solid #dc3545; 
-    padding-bottom: 0.5rem;
-    display: inline-block;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: #1f1f1f;
 }
 
-/* Modal afbeelding */
-.modal-leiding-img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 4px solid #dc3545;
-    border-radius: 50%;
+.hoofdleiding-badge {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: lowercase;
+    margin-top: 0.25rem;
+    color: #666;
 }
-/* Zorg dat de modal header tekst wit is, bijv. door een Bootstrap-class toe te voegen aan de modal header in EJS */
+
+.leiding-bio {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: pre-line;
+    margin-bottom: 1rem;
+    flex: 1;
+}
+
+.leiding-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 0.75rem;
+    margin-top: auto;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contact-item i {
+    font-size: 0.9rem;
+}
+
+.contact-item span {
+    word-break: break-word;
+}
+
+.leiding-empty {
+    flex: 1 1 100%;
+    text-align: center;
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.leiding-card.hoofdleiding .leiding-card-front {
+    box-shadow: 0 22px 40px rgba(0, 0, 0, 0.2);
+}
+
+.cord-separator {
+    width: 100%;
+    line-height: 0;
+    background-color: transparent;
+}
+
+.cord-separator img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+@media (max-width: 992px) {
+    .leiding-grid {
+        justify-content: center;
+    }
+
+    .leiding-section.align-right .leiding-grid,
+    .leiding-section.align-left .leiding-grid,
+    .leiding-section.align-center .leiding-grid {
+        justify-content: center;
+    }
+
+    .leiding-card {
+        flex: 1 1 calc(50% - 1rem);
+        max-width: calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .leiding-section {
+        padding: 2.5rem 0;
+    }
+
+    .leiding-title {
+        font-size: 1.8rem;
+    }
+
+    .leiding-card {
+        min-height: 240px;
+    }
+
+    .leiding-photo,
+    .leiding-photo-placeholder {
+        width: 110px;
+        height: 110px;
+    }
+}
+
+@media (max-width: 576px) {
+    .leiding-grid {
+        gap: 1rem;
+    }
+
+    .leiding-card {
+        flex: 1 1 calc(50% - 0.5rem);
+        max-width: calc(50% - 0.5rem);
+        min-height: 220px;
+    }
+
+    .leiding-photo,
+    .leiding-photo-placeholder {
+        width: 90px;
+        height: 90px;
+        border-width: 3px;
+    }
+
+    .leiding-name {
+        font-size: 0.95rem;
+    }
+
+    .leiding-bio {
+        font-size: 0.8rem;
+    }
+
+    .contact-item {
+        font-size: 0.75rem;
+    }
+}

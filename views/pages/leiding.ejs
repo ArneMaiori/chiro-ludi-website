@@ -1,27 +1,150 @@
 <!DOCTYPE html>
 <html lang="nl">
 <%- include('../partials/head') %>
+    <link rel="stylesheet" href="/css/leiding.css">
 
-<body>
-    <%- include('../partials/header') %>
 
-    <%- include('../partials/hero', { title: 'Leiding', pageKey: 'leiding' }) %>
+    <body>
+        <%- include('../partials/header') %>
 
-    <main class="container my-3">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <% if (isAdmin) { %>
-                <a href="/leiding/admin/editor" class="btn btn-success w-100">
-                    <i class="bi bi-pencil-square me-2"></i> Pas leidingsdata aan
-                </a>
-            <% } %>
-        </div>
+            <%- include('../partials/hero', { title: 'Leiding' , pageKey: 'leiding' }) %>
 
-        <div class="separator-line">
-            <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1762886188/Gemini_Generated_Image_a743xoa743xoa743_yehkrq.png" alt="">
-        </div>
-    </main>
+                <main class="leiding-main">
+                    <% if (isAdmin) { %>
+                        <div class="edit-leiding w-100 py-3">
+                            <div class="container">
+                                <a href="/leiding/admin/editor" class="btn btn-success w-100">
+                                    <i class="bi bi-pencil-square me-2"></i> Pas leidingsdata aan
+                                </a>
+                            </div>
+                        </div>
+                        <% } %>
 
-    <%- include('../partials/footer') %>
-</body>
+                            <% const groupConfig=[ { name: 'Sloebers' , displayName: 'SLOEBER LEIDING' ,
+                                subtitle: 'LEDEN 6-8 JAAR' ,
+                                cordUrl: 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1763488634/sloebers_j4p1vc.png'
+                                , align: 'left' , backgroundColor: '#fbe8ff' , titleColor: '#7c2e91' ,
+                                groupColor: '#7c2e91' }, { name: 'Speelclub' , displayName: 'SPEELCLUB LEIDING' ,
+                                subtitle: 'LEDEN 8-10 JAAR' ,
+                                cordUrl: 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1763488634/speelclub_d6umc0.png'
+                                , align: 'right' , backgroundColor: '#f9f3da' , titleColor: '#a06f00' ,
+                                groupColor: '#a06f00' }, { name: 'Rakwi' , displayName: 'RAKWI LEIDING' ,
+                                subtitle: 'LEDEN 10-12 JAAR' ,
+                                cordUrl: 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1763492946/rakwi_nk2wvw.png'
+                                , align: 'left' , backgroundColor: '#ecfbea' , titleColor: '#0f7a3b' ,
+                                groupColor: '#0f7a3b' }, { name: 'Tito' , displayName: 'TITO LEIDING' ,
+                                subtitle: 'LEDEN 12-14 JAAR' ,
+                                cordUrl: 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1763488635/tito_hi75x7.png'
+                                , align: 'right' , backgroundColor: '#ffecec' , titleColor: '#b3122d' ,
+                                groupColor: '#b3122d' }, { name: 'Keti' , displayName: 'KETI LEIDING' ,
+                                subtitle: 'LEDEN 14-16 JAAR' ,
+                                cordUrl: 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1763488632/keti_xrcfbo.png'
+                                , align: 'left' , backgroundColor: '#e7f1ff' , titleColor: '#1349a7' ,
+                                groupColor: '#1349a7' }, { name: 'Aspi' , displayName: 'ASPI LEIDING' ,
+                                subtitle: 'LEDEN 16-17 JAAR' ,
+                                cordUrl: 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1763489712/aspi_x9dv3j.png'
+                                , align: 'right' , backgroundColor: '#fff0e0' , titleColor: '#c45a11' ,
+                                groupColor: '#c45a11' }, { name: 'Volwassen Begeleiding' ,
+                                displayName: 'VOLWASSEN BEGELEIDING' , subtitle: '' , cordUrl: null, align: 'center' ,
+                                backgroundColor: '#f5f5f5' , titleColor: '#333333' , groupColor: '#333333' } ];
+                                groupConfig.forEach((config, index)=> {
+                                const groupLeiding = leiding.filter((l) => l.group === config.name);
+                                %>
+
+                                <section
+                                    class="leiding-section <%= config.align === 'right' ? 'align-right' : (config.align === 'center' ? 'align-center' : 'align-left') %>"
+                                    style="--section-background: <%= config.backgroundColor %>; --title-color: <%= config.titleColor %>; --group-color: <%= config.groupColor %>;">
+                                    <div class="container">
+                                        <div class="leiding-header">
+                                            <h2 class="leiding-title">
+                                                <%= config.displayName %>
+                                            </h2>
+                                            <% if (config.subtitle) { %>
+                                                <p class="leiding-subtitle">
+                                                    <%= config.subtitle %>
+                                                </p>
+                                                <% } %>
+                                        </div>
+
+                                        <div class="leiding-grid">
+                                            <% if (groupLeiding.length===0) { %>
+                                                <p class="leiding-empty">Er is nog geen leiding gekoppeld aan deze
+                                                    groep.</p>
+                                                <% } %>
+
+                                                    <% groupLeiding.forEach(member=> { %>
+                                                        <article
+                                                            class="leiding-card <%= member.isHoofdleiding ? 'hoofdleiding' : '' %>">
+                                                            <div class="leiding-card-inner">
+                                                                <div class="leiding-card-front">
+                                                                    <% if (member.imageUrl) { %>
+                                                                        <img src="<%= member.imageUrl %>"
+                                                                            alt="<%= member.name %>"
+                                                                            class="leiding-photo">
+                                                                        <% } else { %>
+                                                                            <div class="leiding-photo-placeholder">
+                                                                                <i class="bi bi-person-circle"></i>
+                                                                            </div>
+                                                                            <% } %>
+                                                                                <div class="leiding-name">
+                                                                                    <%= member.name %>
+                                                                                        <% if (member.isHoofdleiding) {
+                                                                                            %>
+                                                                                            <span
+                                                                                                class="hoofdleiding-badge">(hoofdleiding)</span>
+                                                                                            <% } %>
+                                                                                </div>
+                                                                </div>
+                                                                <div class="leiding-card-back">
+                                                                    <div class="leiding-bio">
+                                                                        <%= member.bio %>
+                                                                    </div>
+                                                                    <% if (member.email || member.phone) { %>
+                                                                        <div class="leiding-contact">
+                                                                            <% if (member.email) { %>
+                                                                                <div class="contact-item">
+                                                                                    <i class="bi bi-envelope-fill"></i>
+                                                                                    <a
+                                                                                        href="mailto:<%= member.email %>">
+                                                                                        <%= member.email %>
+                                                                                    </a>
+                                                                                </div>
+                                                                                <% } %>
+                                                                                    <% if (member.phone) { const
+                                                                                        telHref=member.phone.replace(/\s+/g, ''
+                                                                                        ); %>
+                                                                                        <div class="contact-item">
+                                                                                            <i
+                                                                                                class="bi bi-telephone-fill"></i>
+                                                                                            <a
+                                                                                                href="tel:<%= telHref %>">
+                                                                                                <%= member.phone %>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                        <% } %>
+                                                                        </div>
+                                                                        <% } %>
+                                                                </div>
+                                                            </div>
+                                                        </article>
+                                                        <% }); %>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <% if (config.cordUrl) { %>
+                                    <div class="cord-separator" aria-hidden="true">
+                                        <img src="<%= config.cordUrl %>"
+                                            alt="Koord scheiding voor <%= config.displayName %>">
+                                    </div>
+                                    <% } %>
+
+                                        <% }); %>
+                </main>
+
+                <%- include('../partials/footer') %>
+                <script src="/js/leiding.js"></script>
+
+    </body>
 
 </html>
