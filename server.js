@@ -10,12 +10,13 @@ const adminRouter = require('./routes/admin');
 const nieuwsAdminRouter = require('./routes/nieuwsAdmin');
 const leidingRouter = require('./routes/leiding');
 const leidingAdminRouter = require('./routes/leidingAdmin');
+const actiesAdminRouter = require('./routes/actiesAdmin');
 
 const pageConfigMiddleware = require('./middleware/pageConfig');
 
 const Nieuws = require('./models/Nieuws');
-const Config = require('./models/Config');
 const Leiding = require('./models/Leiding');
+const Actie = require('./models/Actie');
 
 /// ---------- Configurations ---------- ///
 const app = express();
@@ -49,9 +50,19 @@ mongoose.connect(process.env.MONGODB_URI)
 
 
 /// ---------- Routes ---------- ///
+// Specifieke routes
+app.use('/nieuws', nieuwsRouter);
+app.use('/admin', adminRouter);
+app.use('/nieuws/admin', nieuwsAdminRouter);
+app.use('/admin', adminRouter);
+app.use('/leiding', leidingRouter);
+app.use('/leiding/admin', leidingAdminRouter);
+app.use('/acties/admin', actiesAdminRouter)
+
 // GET / - Home pagina
 app.get('/', async (req, res) => {
     let recentNieuws = [];
+    let acties = [];
 
     // Get de 5 recenste nieuwsberichten
     try {
@@ -60,11 +71,42 @@ app.get('/', async (req, res) => {
         console.error('Error fetching nieuws posts:', err);
     }
 
+    // Get alle acties in order
+    try {
+        acties = await Actie.find().sort({ order : 1});
+    } catch (err) {
+        console.error("Error fetching acties:", err);
+    }
+
     res.render('pages/home', {
         isAdmin: req.session.isAdmin || false,
         activePage: 'home',
         recentNieuws,
+        acties
     });
+});
+
+// GET /acties/:id - Detail pagina voor een actie
+app.get('/acties/:id', async (req, res) => {
+    try {
+        const actie = await Actie.findById(req.params.id);
+        if (!actie) return res.redirect('/');
+
+        res.render('pages/post_detail', {
+            post: {
+                title: actie.title,
+                imageUrl: actie.imageUrl,
+                description: actie.description,
+            },
+            backLink: '/',
+            backText: 'Terug naar home',
+            isAdmin: req.session.isAdmin || false,
+            activePage: 'home'
+        });
+    } catch (err) {
+        console.error(err);
+        res.redirect('/');
+    }
 });
 
 // GET /contact - Contact pagina
@@ -123,13 +165,6 @@ app.post('/submit-contact', async (req, res) => {
     }
 });
 
-// Andere routes
-app.use('/nieuws', nieuwsRouter);
-app.use('/admin', adminRouter);
-app.use('/nieuws/admin', nieuwsAdminRouter);
-app.use('/admin', adminRouter);
-app.use('/leiding', leidingRouter);
-app.use('/leiding/admin', leidingAdminRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

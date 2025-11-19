@@ -1,15 +1,15 @@
-.news-detail {
+.post-detail {
   line-height: 1.7;
 }
 
-.news-detail .detail-image {
+.post-detail .detail-image {
   max-width: 30%;
   height: auto;
   margin-top: 0.5rem;
 }
 
 @media (max-width: 768px) {
-  .news-detail .detail-image {
+  .post-detail .detail-image {
     float: none;
     display: block;
     margin: 1rem auto;

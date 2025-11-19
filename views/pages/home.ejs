@@ -32,15 +32,16 @@
                                                         </p>
 
                                                         <p class="description text-muted">
-                                                            <% var cleanDescription = item.description.replace(new RegExp('<[^>]*>','gm'), '');
-                                                               var previewText = cleanDescription.substring(0, 200); %>
-                                                            <%= previewText %>...
+                                                            <% var cleanDescription=item.description.replace(new
+                                                                RegExp('<[^>]*>','gm'), '');
+                                                                var previewText = cleanDescription.substring(0, 200); %>
+                                                                <%= previewText %>...
                                                         </p>
 
                                                     </div>
 
                                                     <div class="d-flex justify-content-between align-items-center mt-3">
-                                                        <a href="/nieuws/<%= item._id %>"
+                                                        <a href="/nieuws/<%= item._id %>?source=home"
                                                             class="text-primary text-decoration-none">Lees meer →</a>
                                                     </div>
                                                 </div>
@@ -73,36 +74,77 @@
                             </div>
                         </div>
 
+
                         <div class="col-lg-4">
-                            <h2>Acties</h2>
-                            <div id="actiesCarousel" class="carousel slide acties-widget" data-bs-ride="carousel"
-                                data-bs-interval="8000">
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                        <p>Actie 1: Schrijf je in voor ons kamp!</p>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <p>Actie 2: Steun onze koekjesverkoop</p>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <p>Actie 3: Help ons bij de quizavond!</p>
-                                    </div>
-                                </div>
+                            <div class="d-flex align-items-center mb-4">
+                                <h2 class="mb-0 me-3">In de kijker</h2>
+                                <% if (typeof isAdmin !=='undefined' && isAdmin) { %>
+                                    <a href="/acties/admin" class="btn btn-sm btn-warning align-self-center"
+                                        title="Beheer">
+                                        <i class="bi bi-gear-fill"></i>
+                                    </a>
+                                    <% } %>
                             </div>
 
-                            <div class="socials mt-4 p-3 rounded shadow-sm">
-                                <h2 class="mb-3 text-center">Volg ons</h2>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <a href="https://facebook.com/chirolutselusdiepenbeek" target="_blank"
-                                        class="btn btn-social-facebook btn-lg">
-                                        <i class="bi bi-facebook"></i>
-                                    </a>
-                                    <a href="https://www.instagram.com/chiroludi?igsh=YW5jeGQ2amhoZHpi" target="_blank"
-                                        class="btn btn-social-instagram btn-lg">
-                                        <i class="bi bi-instagram"></i>
-                                    </a>
+                            <% if (typeof acties !=='undefined' && acties && acties.length> 0) { %>
+                                <div id="actiesCarousel" class="carousel slide shadow rounded overflow-hidden"
+                                    data-bs-ride="carousel" data-bs-interval="5000">
+
+                                    <div class="carousel-indicators">
+                                        <% acties.forEach((actie, index)=> { %>
+                                            <button type="button" data-bs-target="#actiesCarousel"
+                                                data-bs-slide-to="<%= index %>"
+                                                class="<%= index === 0 ? 'active' : '' %>"></button>
+                                            <% }); %>
+                                    </div>
+
+                                    <div class="carousel-inner">
+                                        <% acties.forEach((actie, index)=> { %>
+                                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                                <a href="/acties/<%= actie._id %>" class="d-block">
+                                                    <div class="ratio ratio-3x5">
+                                                        <img src="<%= actie.imageUrl %>"
+                                                            class="d-block w-100 object-fit-cover" alt="Actie">
+                                                    </div>
+                                                    <div
+                                                        class="carousel-caption d-none d-md-block p-2 bg-dark bg-opacity-50 rounded bottom-0 mb-4">
+                                                        <h5 class="mb-1"><%= actie.title %></h5>
+                                                        <small>Klik voor meer info</small>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#actiesCarousel"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Vorige</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#actiesCarousel"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Volgende</span>
+                                    </button>
                                 </div>
-                            </div>
+                                <% } else { %>
+                                    <div class="alert alert-info">Momenteel geen acties.</div>
+                                    <% } %>
+
+                                        <h2 class="mb-4 mt-4">Volg ons</h2>
+                                        <div class="socials mt-4 shadow-sm">
+                                            <div class="d-flex justify-content-center gap-5">
+                                                <a href="https://facebook.com/chirolutselusdiepenbeek" target="_blank">
+                                                    <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1763579433/facebook_icon_txtnes.png"
+                                                        alt="Facebook" style="width: 60px; height: 60px;">
+                                                </a>
+                                                <a href="https://www.instagram.com/chiroludi?igsh=YW5jeGQ2amhoZHpi"
+                                                    target="_blank">
+                                                    <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1763579433/Instagram_icon_nktpyn.png"
+                                                        alt="Instagram" style="width: 60px; height: 60px;">
+                                                </a>
+                                            </div>
+                                        </div>
                         </div>
                     </div>
                 </main>

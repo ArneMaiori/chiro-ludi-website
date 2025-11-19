@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<%- include('../partials/head') %>
+<link rel="stylesheet" href="/css/post_detail.css"> 
+
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container my-5">
+        <a href="<%= backLink %>" class="text-decoration-none mb-4 d-inline-block">
+            ← <%= backText %>
+        </a>
+
+        <article class="post-detail">
+            <% if (post.title) { %>
+                <h1 class="mb-3"><%= post.title %></h1>
+            <% } %>
+
+            <% if (post.date) { %>
+                <p class="text-muted mb-2">
+                    <%= new Date(post.date).toLocaleDateString('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                </p>
+            <% } %>
+
+            <div class="position-relative clearfix">
+                <% if (post.imageUrl) { %>
+                    <img src="<%= post.imageUrl %>" alt="Detail afbeelding" 
+                         class="img-fluid rounded shadow-sm float-md-end ms-md-4 mb-3 detail-image"
+                         style="max-height: 80vh; width: auto; object-fit: contain;">
+                <% } %>
+
+                <div class="post-description">
+                    <p class="lead" style="white-space: pre-line;">
+                        <%- post.description %>
+                    </p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

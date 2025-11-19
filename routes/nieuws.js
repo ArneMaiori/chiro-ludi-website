@@ -46,12 +46,25 @@ router.get('/:id', async (req, res) => {
     if (!nieuwsItem) return res.status(404).send('Nieuwsbericht niet gevonden');
 
     const currentPage = req.query.page || 1;
+    const source = req.query.source;
 
-    res.render('pages/nieuws_detail', {
-      nieuws: nieuwsItem,
+    // Bepaal de terug-link en tekst
+    let backLink = `/nieuws?page=${currentPage}`;
+    let backText = 'Terug naar nieuws';
+    let activePage = 'nieuws';
+
+    if (source === 'home') {
+        backLink = '/';
+        backText = 'Terug naar home';
+        activePage = 'home';
+    }
+
+    res.render('pages/post_detail', {
+      post: nieuwsItem,
       isAdmin: req.session?.isAdmin,
-      activePage: 'nieuws',
-      returnPage: currentPage
+      activePage: activePage, 
+      backLink: backLink,
+      backText: backText
     });
   } catch (err) {
     console.error(err);
