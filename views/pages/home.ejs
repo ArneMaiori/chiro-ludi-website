@@ -107,8 +107,11 @@
                                                             class="d-block w-100 object-fit-cover" alt="Actie">
                                                     </div>
                                                     <div
-                                                        class="carousel-caption d-none d-md-block p-2 bg-dark bg-opacity-50 rounded bottom-0 mb-4">
-                                                        <h5 class="mb-1"><%= actie.title %></h5>
+                                                        class="carousel-caption p-2 bg-dark bg-opacity-50 rounded bottom-0 mb-4">
+                                                        <h5 class="mb-1">
+                                                            <%= actie.title.length> 40 ? actie.title.substring(0, 40) +
+                                                                '...' : actie.title %>
+                                                        </h5>
                                                         <small>Klik voor meer info</small>
                                                     </div>
                                                 </a>
@@ -118,12 +121,14 @@
 
                                     <button class="carousel-control-prev" type="button" data-bs-target="#actiesCarousel"
                                         data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="carousel-control-prev-icon bg-dark bg-opacity-50 rounded"
+                                            aria-hidden="true"></span>
                                         <span class="visually-hidden">Vorige</span>
                                     </button>
                                     <button class="carousel-control-next" type="button" data-bs-target="#actiesCarousel"
                                         data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="carousel-control-next-icon bg-dark bg-opacity-50 rounded"
+                                            aria-hidden="true"></span>
                                         <span class="visually-hidden">Volgende</span>
                                     </button>
                                 </div>

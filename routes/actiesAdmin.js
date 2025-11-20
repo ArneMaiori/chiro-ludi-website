@@ -63,6 +63,7 @@ router.post('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const { title, description, existingImagePublicId } = req.body;
         let updateData = { title, description };
+        console.log(description);
 
         // nieuwe afbeelding, verwijder oude
         if (req.file) {

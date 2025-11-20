@@ -8,6 +8,10 @@
   margin-top: 0.5rem;
 }
 
+.post-title {
+  overflow: clip;
+}
+
 @media (max-width: 768px) {
   .post-detail .detail-image {
     float: none;
