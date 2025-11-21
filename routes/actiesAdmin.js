@@ -18,7 +18,7 @@ const upload = multer({
 
 router.use(isAdmin);
 
-// GET / - Open editor pagina
+// GET / - open editor pagina
 router.get('/', async (req, res) => {
     try {
         // Sorteer op order
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST / - Upload nieuwe actie
+// POST / - upload nieuwe actie
 router.post('/', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).send('Afbeelding is verplicht');
@@ -58,7 +58,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 });
 
-// POST /edit/:id - Bewerk actie
+// POST /edit/:id - bewerk actie
 router.post('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const { title, description, existingImagePublicId } = req.body;
@@ -81,7 +81,7 @@ router.post('/edit/:id', upload.single('image'), async (req, res) => {
     }
 });
 
-// POST /delete/:id - Verwijder actie
+// POST /delete/:id - verwijder actie
 router.post('/delete/:id', async (req, res) => {
     try {
         const actie = await Actie.findById(req.params.id);
@@ -96,7 +96,7 @@ router.post('/delete/:id', async (req, res) => {
     }
 });
 
-// POST /reorder - Volgorde wijzigen
+// POST /reorder - volgorde wijzigen
 router.post('/reorder', express.json(), async (req, res) => {
     try {
         const { order } = req.body;

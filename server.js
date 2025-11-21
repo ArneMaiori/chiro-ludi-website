@@ -20,6 +20,7 @@ const Actie = require('./models/Actie');
 
 /// ---------- Configurations ---------- ///
 const app = express();
+app.set('trust proxy', 1);
 
 // Session
 app.use(session({
@@ -27,7 +28,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
@@ -127,6 +129,16 @@ app.get('/contact', async (req, res) => {
         hoofdleidingen,
     });
 });
+
+
+// Tijdelijke routes voor onafgewerkte pagina's
+app.get(['/jaarkalender', '/lid_worden'], (req, res) => {
+    res.render('pages/constructie', {
+        activePage: req.path.substring(1),
+        isAdmin: req.session.isAdmin || false
+    });
+});
+
 
 /**
  * @todo chiro email + pass opvragen

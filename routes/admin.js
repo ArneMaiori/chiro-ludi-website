@@ -7,16 +7,24 @@ const Config = require('../models/Config');
 
 const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../utils/cloudinary');
 const isAdmin = require('../middleware/isAdmin');
+const rateLimit = require('express-rate-limit');
 
 /// ---------- Configurations ---------- ///
 // Multer
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+// Login limiet
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: { success: false, message: "Te veel pogingen, probeer later opnieuw." }
+});
+
 
 /// ---------- Admin Routes ---------- ///
 // POST /admin - Admin login
-router.post('/', (req, res) => {
+router.post('/', loginLimiter, (req, res) => {
   const { password } = req.body;
 
   if (password === process.env.ADMIN_PASS) {
