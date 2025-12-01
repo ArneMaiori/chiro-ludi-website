@@ -12,6 +12,25 @@
   %>
   <title><%= (activePage === 'home' || activePage === '404' ? 'Chiro Ludi - ' + finalTitle : finalTitle + ' - Chiro Ludi') %></title>  
 
+  <% if (activePage === 'home') {
+  <meta name="description" content="De leukste jeugdvereniging van de gemeente Diepenbeek! Wat? Wij zijn een groep gemotiveerde jongeren die kinderen in hun vrije tijd samenbrengen, zonder onderscheid. Via spel laten we hen ervaringen opdoen, leren we hen samenleven en bieden we hen een kijk op zichzelf en op de wereld.
+  Waar?	Nieuwstraat 116b 3590 Diepenbeek (Tegenover het Lutselusplein en achter de school). Wanneer? Elke zondag van 14:00 tot 17:00"> } %>
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Jeugdvereniging",
+      "name": "Chiro Ludi",
+      "url": "https://www.chiroludi.com/", 
+      "sameAs": [
+        "https://facebook.com/chirolutselusdiepenbeek", 
+        "https://www.instagram.com/chiroludi"
+      ],
+      "logo": "https://res.cloudinary.com/dph1xlgfc/image/upload/v1764610321/favicon-96x96_qlkexb.png" 
+    }
+  </script>
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -25,5 +44,5 @@
   <link rel="stylesheet" href="/css/style.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dph1xlgfc/image/upload/v1758642963/favicon-32x32_sgig50.png">
+  <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dph1xlgfc/image/upload/v1764610321/favicon-96x96_qlkexb.png">
 </head>
