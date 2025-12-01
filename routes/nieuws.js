@@ -63,6 +63,7 @@ router.get('/:id', async (req, res) => {
       post: nieuwsItem,
       isAdmin: req.session?.isAdmin,
       activePage: activePage, 
+      pageTitle: nieuwsItem.title,
       backLink: backLink,
       backText: backText
     });
