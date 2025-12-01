@@ -169,7 +169,8 @@ app.get('/acties/:id', async (req, res) => {
             backLink: '/',
             backText: 'Terug naar home',
             isAdmin: req.session.isAdmin || false,
-            activePage: 'home'
+            activePage: 'home',
+            pageTitle: actie.title
         });
     } catch (err) {
         console.error(err);
