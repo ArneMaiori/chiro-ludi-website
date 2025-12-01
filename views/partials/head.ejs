@@ -1,7 +1,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chiro Ludi - <%= typeof activePage !== 'undefined' ? activePage : 'Home' %></title>
+  
+  <!-- Hulpfunctie voor pagina titels, vervang underscores met spaties en zet eerste letters hoofdletter -->
+  <% 
+    const cleanPageName = (page) => {
+      if (!page) return '';
+      return page.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    };
+  %>
+  <title>Chiro Ludi - <%= cleanPageName(activePage) || 'Home' %></title>
   
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
