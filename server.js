@@ -61,6 +61,72 @@ app.use('/leiding', leidingRouter);
 app.use('/leiding/admin', leidingAdminRouter);
 app.use('/acties/admin', actiesAdminRouter)
 
+// GET /sitemap.xml - Genereer dynamische sitemap
+app.get('/sitemap.xml', async (req, res) => {
+    try {
+        const nieuwsItems = await Nieuws.find().select('_id date');
+        const actieItems = await Actie.find().select('_id');
+
+        const hostname = 'https://www.chiroludi.com';
+
+        let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
+        // Statische pagina's
+        const staticRoutes = [
+            { loc: '/', changefreq: 'daily', priority: '1.0' },
+            { loc: '/nieuws', changefreq: 'daily', priority: '0.8' },
+            { loc: '/leiding', changefreq: 'monthly', priority: '0.7' },
+            { loc: '/jaarkalender', changefreq: 'monthly', priority: '0.6' },
+            { loc: '/lid_worden', changefreq: 'monthly', priority: '0.6' },
+            { loc: '/contact', changefreq: 'yearly', priority: '0.5' },
+        ];
+
+        staticRoutes.forEach(route => {
+            sitemap += `
+<url>
+    <loc>${hostname}${route.loc}</loc>
+    <changefreq>${route.changefreq}</changefreq>
+    <priority>${route.priority}</priority>
+</url>`;
+        });
+
+
+        // Dynamische nieuws posts
+        nieuwsItems.forEach(item => {
+            const lastmod = item.date.toISOString().split('T')[0];
+            sitemap += `
+<url>
+    <loc>${hostname}/nieuws/${item._id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+</url>`;
+        });
+
+        // Dynamische acties
+        actieItems.forEach(item => {
+            sitemap += `
+<url>
+    <loc>${hostname}/acties/${item._id}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+</url>`;
+        });
+
+        sitemap += `
+</urlset>`;
+
+        res.header('Content-Type', 'application/xml');
+        res.send(sitemap);
+
+    } catch (err) {
+        console.error("Fout bij genereren sitemap:", err);
+        res.status(500).send('Kon sitemap niet genereren');
+    }
+});
+
+
 // GET / - Home pagina
 app.get('/', async (req, res) => {
     let recentNieuws = [];
@@ -75,7 +141,7 @@ app.get('/', async (req, res) => {
 
     // Get alle acties in order
     try {
-        acties = await Actie.find().sort({ order : 1});
+        acties = await Actie.find().sort({ order: 1 });
     } catch (err) {
         console.error("Error fetching acties:", err);
     }
