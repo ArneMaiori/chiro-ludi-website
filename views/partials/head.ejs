@@ -12,10 +12,12 @@
   %>
   <title><%= (activePage === 'home' || activePage === '404' ? 'Chiro Ludi - ' + finalTitle : finalTitle + ' - Chiro Ludi') %></title>  
 
-  <% if (activePage === 'home') {
-  <meta name="description" content="De leukste jeugdvereniging van de gemeente Diepenbeek! Wat? Wij zijn een groep gemotiveerde jongeren die kinderen in hun vrije tijd samenbrengen, zonder onderscheid. Via spel laten we hen ervaringen opdoen, leren we hen samenleven en bieden we hen een kijk op zichzelf en op de wereld.
-  Waar?	Nieuwstraat 116b 3590 Diepenbeek (Tegenover het Lutselusplein en achter de school). Wanneer? Elke zondag van 14:00 tot 17:00"> } %>
-
+  <% if (activePage === 'home') { %>
+    <meta 
+      name="description" 
+      content="De leukste jeugdvereniging van de gemeente Diepenbeek! Wat? Wij zijn een groep gemotiveerde jongeren die kinderen in hun vrije tijd samenbrengen, zonder onderscheid. Via spel laten we hen ervaringen opdoen, leren we hen samenleven en bieden we hen een kijk op zichzelf en op de wereld. Waar? Nieuwstraat 116b 3590 Diepenbeek. Wanneer? Elke zondag van 14:00 tot 17:00"
+    >
+  <% } %>
 
   <script type="application/ld+json">
     {
