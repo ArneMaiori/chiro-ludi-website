@@ -1,50 +1,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Hulpfunctie voor pagina titels, vervang underscores met spaties en zet eerste letters hoofdletter -->
-  <% 
-    const cleanPageName = (page) => {
-      if (!page) return '';
-      return page.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+
+  <% // Hulpfunctie voor pagina titels, vervangt underscores met spaties en zet hoofdletters const
+    cleanPageName=(page)=> {
+    if (!page) return '';
+    return page.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
     };
     const finalTitle = typeof pageTitle !== 'undefined' ? pageTitle : (cleanPageName(activePage) || 'Home');
-  %>
-  <title><%= (activePage === 'home' || activePage === '404' ? 'Chiro Ludi - ' + finalTitle : finalTitle + ' - Chiro Ludi') %></title>  
 
-  <% if (activePage === 'home') { %>
-    <meta 
-      name="description" 
-      content="De leukste jeugdvereniging van de gemeente Diepenbeek! Wat? Wij zijn een groep gemotiveerde jongeren die kinderen in hun vrije tijd samenbrengen, zonder onderscheid. Via spel laten we hen ervaringen opdoen, leren we hen samenleven en bieden we hen een kijk op zichzelf en op de wereld. Waar? Nieuwstraat 116b 3590 Diepenbeek. Wanneer? Elke zondag van 14:00 tot 17:00"
-    >
-  <% } %>
+    // Dynamische canonical URL
+    const canonicalUrl = (() => {
+      // Nieuws & Acties
+      if (typeof post !== 'undefined' && post && post._id) {
+        return activePage === 'acties' ? 'https://www.chiroludi.com/acties/' + post._id : 'https://www.chiroludi.com/nieuws/' + post._id;
+      }
+      // Home
+      if (activePage === 'home') return 'https://www.chiroludi.com/';
+      // Overige
+      return 'https://www.chiroludi.com/' + activePage;
+    })();
 
-  <script type="application/ld+json">
+    // Dynamische meta description
+    const metaDescription = (() => {
+      switch(activePage) {
+        case 'home':
+          return "De leukste jeugdvereniging van de gemeente Diepenbeek! Elke zondag van 14:00 tot 17:00 spel en plezier op Nieuwstraat 116b";
+        case 'nieuws':
+          return "Blijf op de hoogte van het laatste nieuws en evenementen.";
+        case 'leiding':
+          return "Maak kennis met de leiding van Chiro Ludi.";
+        case 'jaarkalender':
+          return "Bekijk de jaarkalender en ontdek al onze activiteiten.";
+        case 'lid_worden':
+          return "Alles wat je moet weten om lid te worden en je in te schrijven.";
+        case 'contact':
+          return "Neem contact op met ons.";
+        default:
+          return "Chiro Ludi - jeugdvereniging in Diepenbeek.";
+      }
+    })();
+    %>
+
+    <!-- Title & Meta -->
+    <title>
+      <%= 'Chiro Ludi - ' + finalTitle %>
+    </title>
+    <meta name="description" content="<%= metaDescription %>">
+    <link rel="canonical" href="<%= canonicalUrl %>">
+
+    <!-- Open Graph (voor Facebook en Insta) -->
+    <meta property="og:title" content="<%= 'Chiro Ludi - ' + finalTitle %>">
+    <meta property="og:description" content="<%= metaDescription %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= canonicalUrl %>">
+    <meta property="og:image" content="/favicon-512.png">
+    <meta property="og:site_name" content="Chiro Ludi">
+
+    <!-- Twitter Card (niet van toepassing maar goed voor redenering google)-->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= 'Chiro Ludi - ' + finalTitle %>">
+    <meta name="twitter:description" content="<%= metaDescription %>">
+    <meta name="twitter:image" content="/favicon-512.png">
+    <meta name="twitter:site" content="@chiroludi">
+
+    <!-- JSON-LD Organization -->
+    <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Jeugdvereniging",
+      "@type": "Organization",
       "name": "Chiro Ludi",
-      "url": "https://www.chiroludi.com/", 
+      "url": "https://www.chiroludi.com/",
+      "logo": "/favicon-192.png",
       "sameAs": [
-        "https://facebook.com/chirolutselusdiepenbeek", 
+        "https://facebook.com/chirolutselusdiepenbeek",
         "https://www.instagram.com/chiroludi"
-      ],
-      "logo": "https://res.cloudinary.com/dph1xlgfc/image/upload/v1764610321/favicon-96x96_qlkexb.png" 
+      ]
     }
-  </script>
+    </script>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/css/style.css">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dph1xlgfc/image/upload/v1764610321/favicon-96x96_qlkexb.png">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
