@@ -86,15 +86,14 @@
                                     <h2 class="mb-4">Waar vind je ons?</h2>
                                     <div class="card shadow border-0 flex-grow-1">
                                         <div class="card-body p-0">
-                                            <% const cardCount = Array.isArray(hoofdleidingen) ? hoofdleidingen.length : 0; 
-                                               const mapHeights = { 2: 297, 3: 452 }; 
-                                               const mapHeight = mapHeights[cardCount] || 297; %>
+                                            <% const cardCount=Array.isArray(hoofdleidingen) ? hoofdleidingen.length :
+                                                0; const mapHeights={ 2: 297, 3: 452 }; const
+                                                mapHeight=mapHeights[cardCount] || 297; %>
                                                 <iframe
                                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2515.1313625669436!2d5.44533107685134!3d50.92128695335102!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c0df005f3f5929%3A0xa5e2ab3b684d1a67!2sChiro%20Ludi!5e0!3m2!1snl!2sbe!4v1762945786317!5m2!1snl!2sbe"
                                                     id="contact-map" width="100%" height="<%= mapHeight %>"
-                                                    style="border:0; border-radius: 0.5rem;"
-                                                    allowfullscreen="" loading="lazy"
-                                                    referrerpolicy="no-referrer-when-downgrade">
+                                                    style="border:0; border-radius: 0.5rem;" allowfullscreen=""
+                                                    loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                                                 </iframe>
                                         </div>
                                     </div>
@@ -129,6 +128,22 @@
                                                         <label for="bericht" class="form-label">Je vraag *</label>
                                                         <textarea class="form-control" id="bericht" name="bericht"
                                                             rows="5" required></textarea>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="mb-3 form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                id="privacyCheck" name="privacyAccepted" required>
+                                                            <label class="form-check-label small" for="privacyCheck">
+                                                                Ik ga akkoord met het verwerken van mijn gegevens om
+                                                                mijn vraag te beantwoorden.
+                                                                Ik heb de <a href="/privacy"
+                                                                    target="_blank">privacyverklaring</a> gelezen en
+                                                                begrepen. *
+                                                            </label>
+                                                            <div class="invalid-feedback">
+                                                                Gelieve akkoord te gaan met de privacyverklaring.
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col-12">
                                                         <button type="submit" class="btn btn-primary">Verstuur
