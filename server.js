@@ -198,6 +198,12 @@ app.get('/contact', async (req, res) => {
 });
 
 
+// GET /privacy - Privacyverklaring
+app.get('/privacy', (req, res) => {
+    res.render('pages/privacy', {isAdmin: req.session.isAdmin || false, activePage: 'home'});
+})
+
+
 // Tijdelijke routes voor onafgewerkte pagina's
 app.get(['/jaarkalender', '/lid_worden'], (req, res) => {
     res.render('pages/constructie', {

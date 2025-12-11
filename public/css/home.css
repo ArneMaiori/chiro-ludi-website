@@ -14,9 +14,10 @@
 }
 
 /* Carousel */
-.ratio-3x5 {
-  --bs-aspect-ratio: 166.66%;
+.ratio-3x4 {
+  --bs-aspect-ratio: 133.33%;
 }
+
 
 .carousel-item {
   transition: transform 0.6s ease-in-out;

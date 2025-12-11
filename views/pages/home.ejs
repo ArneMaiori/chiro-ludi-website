@@ -102,7 +102,7 @@
                                         <% acties.forEach((actie, index)=> { %>
                                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                                                 <a href="/acties/<%= actie._id %>" class="d-block">
-                                                    <div class="ratio ratio-3x5">
+                                                    <div class="ratio ratio-3x4">
                                                         <img src="<%= actie.imageUrl %>"
                                                             class="d-block w-100 object-fit-cover" alt="Actie">
                                                     </div>
@@ -135,21 +135,6 @@
                                 <% } else { %>
                                     <div class="alert alert-info">Momenteel geen acties.</div>
                                     <% } %>
-
-                                        <h2 class="mb-4 mt-4">Volg ons</h2>
-                                        <div class="socials mt-4 shadow-sm">
-                                            <div class="d-flex justify-content-center gap-5">
-                                                <a href="https://facebook.com/chirolutselusdiepenbeek" target="_blank">
-                                                    <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1763579433/facebook_icon_txtnes.png"
-                                                        alt="Facebook" style="width: 60px; height: 60px;">
-                                                </a>
-                                                <a href="https://www.instagram.com/chiroludi"
-                                                    target="_blank">
-                                                    <img src="https://res.cloudinary.com/dph1xlgfc/image/upload/v1763579433/Instagram_icon_nktpyn.png"
-                                                        alt="Instagram" style="width: 60px; height: 60px;">
-                                                </a>
-                                            </div>
-                                        </div>
                         </div>
                     </div>
                 </main>
