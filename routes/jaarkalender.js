@@ -3,6 +3,7 @@ const router = express.Router();
 const KalenderPlanning = require('../models/KalenderPlanning');
 const Maandkalender = require('../models/Maandkalender');
 
+// Open de jaarkalender pagina
 router.get('/', async (req, res) => {
     try {
         const planning = await KalenderPlanning.find().sort({ date: 1 });
