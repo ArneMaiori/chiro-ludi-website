@@ -222,9 +222,6 @@ app.get('/lid_worden', (req, res) => {
 });
 
 
-/**
- * @todo chiro email + pass opvragen
- */
 // POST /submit-contact - stel vraag aan email
 app.post('/submit-contact', async (req, res) => {
     const { naam, email, onderwerp, bericht } = req.body;
@@ -233,15 +230,15 @@ app.post('/submit-contact', async (req, res) => {
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'arne.maiori@gmail.com',
-            pass: 'tmougilqlwnbdysm'
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         }
     });
 
     // Definieer de e-mailinhoud
     const mailOptions = {
-        from: 'Formulier Chiro Ludi <arne.maiori@gmail.com>',
-        to: 'arne.maiori@gmail.com',
+        from: `Formulier Chiro Ludi <${process.env.EMAIL_USER}>`,
+        to: process.env.EMAIL_USER,
         subject: `Website vraag: ${onderwerp || 'Geen onderwerp'}`,
         html: `
             <p><b>Naam:</b> ${naam}</p>
