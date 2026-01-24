@@ -235,7 +235,9 @@ app.post('/submit-contact', async (req, res) => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 10000,
+    tls: {
+        family: 4
+    }
     });
 
     // Definieer de e-mailinhoud
