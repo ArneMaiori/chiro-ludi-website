@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo').default;
 const path = require("path");
 const nodemailer = require('nodemailer');
 
@@ -11,6 +12,8 @@ const nieuwsAdminRouter = require('./routes/nieuwsAdmin');
 const leidingRouter = require('./routes/leiding');
 const leidingAdminRouter = require('./routes/leidingAdmin');
 const actiesAdminRouter = require('./routes/actiesAdmin');
+const jaarkalenderRouter = require('./routes/jaarkalender');
+const jaarkalenderAdminRouter = require('./routes/jaarkalenderAdmin');
 
 const pageConfigMiddleware = require('./middleware/pageConfig');
 
@@ -27,6 +30,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ 
+        mongoUrl: process.env.MONGODB_URI,
+        collectionName: 'sessions' 
+    }),
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
@@ -60,6 +67,8 @@ app.use('/admin', adminRouter);
 app.use('/leiding', leidingRouter);
 app.use('/leiding/admin', leidingAdminRouter);
 app.use('/acties/admin', actiesAdminRouter)
+app.use('/jaarkalender', jaarkalenderRouter);
+app.use('/jaarkalender/admin', jaarkalenderAdminRouter);
 
 // GET /sitemap.xml - Genereer dynamische sitemap
 app.get('/sitemap.xml', async (req, res) => {
@@ -205,7 +214,7 @@ app.get('/privacy', (req, res) => {
 
 
 // Tijdelijke routes voor onafgewerkte pagina's
-app.get(['/jaarkalender', '/lid_worden'], (req, res) => {
+app.get('/lid_worden', (req, res) => {
     res.render('pages/constructie', {
         activePage: req.path.substring(1),
         isAdmin: req.session.isAdmin || false

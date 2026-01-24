@@ -1,0 +1,26 @@
+div.clickable-event.bg-warning-subtle {
+    transition: background-color 0.2s ease !important;
+    background-color: #fff3cd !important;
+}
+
+div.clickable-event.bg-warning-subtle:hover {
+    background-color: #ffe69c !important;
+    cursor: pointer;
+}
+
+.bi {
+    vertical-align: middle;
+}
+
+.calendar-list form {
+    margin-bottom: 0;
+}
+
+.sticky-top img {
+    width: 100%;
+    object-fit: cover;
+}
+
+#event-form {
+    scroll-margin-top: 100px;
+}
