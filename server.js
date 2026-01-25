@@ -4,8 +4,7 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo').default;
 const path = require("path");
-const nodemailer = require('nodemailer');
-const Brevo = require('@getbrevo/brevo');
+const SibApiV3Sdk = require('@getbrevo/brevo');
 
 const nieuwsRouter = require('./routes/nieuws');
 const adminRouter = require('./routes/admin');
@@ -227,15 +226,13 @@ app.get('/lid_worden', (req, res) => {
 app.post('/submit-contact', async (req, res) => {
     const { naam, email, onderwerp, bericht } = req.body;
 
-    // Configuratie van de API
-    let defaultClient = Brevo.ApiClient.instance;
-    let apiKey = defaultClient.authentications['api-key'];
+    // Configuratie van API 
+    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+    let apiKey = apiInstance.authentications['apiKey'];
     apiKey.apiKey = process.env.BREVO_API_KEY;
 
-    let apiInstance = new Brevo.TransactionalEmailsApi();
-    let sendSmtpEmail = new Brevo.SendSmtpEmail();
-
-    // Email samenstellen
+    // Email object
+    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
     sendSmtpEmail = {
         sender: { name: "Chiro Ludi Website", email: process.env.EMAIL_USER },
         to: [{ email: process.env.EMAIL_USER }],
@@ -251,7 +248,7 @@ app.post('/submit-contact', async (req, res) => {
 
     try {
         await apiInstance.sendTransacEmail(sendSmtpEmail);
-        console.log('E-mail succesvol verzonden via API');
+        console.log('E-mail succesvol verzonden via HTTP API');
         res.redirect('/contact?status=success');
     } catch (error) {
         console.error('Brevo API Error:', error);
