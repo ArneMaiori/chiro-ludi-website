@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo').default;
 const path = require("path");
 const nodemailer = require('nodemailer');
+const Brevo = require('@getbrevo/brevo');
 
 const nieuwsRouter = require('./routes/nieuws');
 const adminRouter = require('./routes/admin');
@@ -222,38 +223,38 @@ app.get('/lid_worden', (req, res) => {
 });
 
 
-// POST /submit-contact - stel vraag aan email
+// POST /submit-contact - Stel vraag via email
 app.post('/submit-contact', async (req, res) => {
     const { naam, email, onderwerp, bericht } = req.body;
 
-    // Configuratie
-    const transporter = nodemailer.createTransport({
-    host: 'smtp-relay.sendinblue.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-    });
+    // Configuratie van de API
+    let defaultClient = Brevo.ApiClient.instance;
+    let apiKey = defaultClient.authentications['api-key'];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
 
-    // Definieer de e-mailinhoud
-    const mailOptions = {
-        from: `Formulier Chiro Ludi <${process.env.EMAIL_USER}>`,
-        to: process.env.EMAIL_USER,
+    let apiInstance = new Brevo.TransactionalEmailsApi();
+    let sendSmtpEmail = new Brevo.SendSmtpEmail();
+
+    // Email samenstellen
+    sendSmtpEmail = {
+        sender: { name: "Chiro Ludi Website", email: process.env.EMAIL_USER },
+        to: [{ email: process.env.EMAIL_USER }],
+        replyTo: { email: email, name: naam },
         subject: `Website vraag: ${onderwerp || 'Geen onderwerp'}`,
-        html: `
+        htmlContent: `
+            <h3>Nieuw bericht via de website</h3>
             <p><b>Naam:</b> ${naam}</p>
-            <p><b>E-mail:</b> ${email}</p>
-            <p><b>Bericht:</b> ${bericht}</p>
+            <p><b>E-mail van afzender:</b> ${email}</p>
+            <p><b>Bericht:</b><br>${bericht}</p>
         `
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await apiInstance.sendTransacEmail(sendSmtpEmail);
+        console.log('E-mail succesvol verzonden via API');
         res.redirect('/contact?status=success');
     } catch (error) {
-        console.error('Fout bij het versturen van mail:', error);
+        console.error('Brevo API Error:', error);
         res.redirect('/contact?status=error');
     }
 });
