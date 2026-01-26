@@ -16,9 +16,9 @@ const upload = multer({ storage });
 
 // Login limiet
 const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
-    message: { success: false, message: "Te veel pogingen, probeer later opnieuw." }
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: "Te veel pogingen, probeer later opnieuw." }
 });
 
 
@@ -50,6 +50,10 @@ router.post('/logout', (req, res) => {
 router.post('/hero-config', isAdmin, upload.single('image'), async (req, res) => {
   const { pageKey, existingImagePublicId, imageRemoved } = req.body;
 
+  if (!pageKey || pageKey === 'null' || pageKey === 'undefined') {
+    return res.status(400).send("Fout: pageKey ontbreekt in het verzoek.");
+  }
+
   try {
     let newImageUrl = null;
     let newImagePublicId = null;
@@ -75,16 +79,17 @@ router.post('/hero-config', isAdmin, upload.single('image'), async (req, res) =>
 
     // Update database
     await Config.findOneAndUpdate(
-      {pageKey: pageKey},
+      { pageKey: pageKey },
       {
-        $set: {
-          heroImageUrl: newImageUrl,
-          heroImagePublicId: newImagePublicId},
-        $setOnInsert: {pageKey: pageKey} },
+        heroImageUrl: newImageUrl,
+        heroImagePublicId: newImagePublicId
+      },
       {
         upsert: true,
         new: true,
-        runValidators: true}
+        runValidators: true,
+        setDefaultsOnInsert: true
+      }
     );
 
     res.redirect(`/${pageKey === 'home' ? '' : pageKey}`);

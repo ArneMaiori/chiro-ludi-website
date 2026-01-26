@@ -187,6 +187,14 @@ app.get('/acties/:id', async (req, res) => {
     }
 });
 
+// GET /lid_worden - Lid worden pagina
+app.get('/lid_worden', (req, res) => {
+    res.render('pages/lid_worden', {
+        activePage: 'lid_worden',
+        isAdmin: req.session.isAdmin || false
+    });
+});
+
 // GET /contact - Contact pagina
 app.get('/contact', async (req, res) => {
     let hoofdleidingen = [];
@@ -211,15 +219,6 @@ app.get('/contact', async (req, res) => {
 app.get('/privacy', (req, res) => {
     res.render('pages/privacy', {isAdmin: req.session.isAdmin || false, activePage: 'home'});
 })
-
-
-// Tijdelijke routes voor onafgewerkte pagina's
-app.get('/lid_worden', (req, res) => {
-    res.render('pages/constructie', {
-        activePage: req.path.substring(1),
-        isAdmin: req.session.isAdmin || false
-    });
-});
 
 
 // POST /submit-contact - Stel vraag via email
