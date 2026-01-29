@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const cloudinary = require('../config/cloudinary');
 
 const Config = require('../models/Config');
 
@@ -23,7 +22,7 @@ const loginLimiter = rateLimit({
 
 
 /// ---------- Admin Routes ---------- ///
-// POST /admin - Admin login
+// POST - Admin login
 router.post('/', loginLimiter, (req, res) => {
   const { password } = req.body;
 
@@ -37,7 +36,7 @@ router.post('/', loginLimiter, (req, res) => {
 });
 
 
-// POST /admin/logout - Admin logout
+// POST - Admin logout
 router.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) console.error('Session destroy error:', err);
@@ -46,7 +45,8 @@ router.post('/logout', (req, res) => {
 });
 
 
-// POST /admin/hero-config - Nieuwe hero-afbeelding upload
+/// ---------- Hero  Routes ---------- ///
+// POST - Nieuwe hero-afbeelding upload
 router.post('/hero-config', isAdmin, upload.single('image'), async (req, res) => {
   const { pageKey, existingImagePublicId, imageRemoved } = req.body;
 

@@ -6,6 +6,7 @@ const Maandkalender = require('../models/Maandkalender');
 const isAdmin = require('../middleware/isAdmin');
 const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../utils/cloudinary');
 
+/// ---------- Hulpfuncties & Configuraties ---------- ///
 const storage = multer.memoryStorage();
 const upload = multer({
     storage,
@@ -16,17 +17,16 @@ const upload = multer({
         else cb(new Error('Alleen JPG/PNG/WEBP toegestaan'));
     }
 });
-
 router.use(isAdmin);
 
-// Hulpfunctie om datum te maken
+// Datum aanmaken
 function constructDate(day, month) {
     const year = new Date().getFullYear();
     return new Date(year, month, day, 12, 0, 0);
 }
 
-// --- Maandkalender ---
-// Upload nieuwe maandkalender
+/// ---------- Maandkalender Routes ---------- ///
+// Post - Upload nieuwe maandkalender
 router.post('/upload-maandkalender', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) return res.redirect('/jaarkalender?status=error');
@@ -51,7 +51,7 @@ router.post('/upload-maandkalender', upload.single('image'), async (req, res) =>
     }
 });
 
-// Verwijder de huidige maandkalender
+// POST - Verwijder de huidige maandkalender
 router.post('/delete-maandkalender', async (req, res) => {
     try {
         const maandkalender = await Maandkalender.findOne();
@@ -65,8 +65,8 @@ router.post('/delete-maandkalender', async (req, res) => {
     }
 });
 
-// --- Activiteiten ---
-// Voeg een nieuw event toe aan de kalender
+/// ---------- Event Routes ---------- ///
+// POST - Voeg een nieuw event toe aan de kalender
 router.post('/add-event', async (req, res) => {
     try {
         const { day, month, title } = req.body;
@@ -78,7 +78,7 @@ router.post('/add-event', async (req, res) => {
     } catch (err) { res.redirect('/jaarkalender?error'); }
 });
 
-// Pas een event in de kalender aan
+// POST - Pas een event in de kalender aan
 router.post('/edit-event/:id', async (req, res) => {
     try {
         const { day, month, title } = req.body;
@@ -90,7 +90,7 @@ router.post('/edit-event/:id', async (req, res) => {
     } catch (err) { res.redirect('/jaarkalender?error'); }
 });
 
-// Verwijder een event in de kalender
+// POST - Verwijder een event in de kalender
 router.post('/delete-event/:id', async (req, res) => {
     try {
         await KalenderPlanning.findByIdAndDelete(req.params.id);

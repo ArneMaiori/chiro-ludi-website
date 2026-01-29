@@ -19,20 +19,35 @@
 .hero::after {
   content: '';
   position: absolute;
-  bottom: -15px;
+  bottom: -18px;
   left: 0;
   width: 100%;
   height: 110px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23f3f4f6' d='M0,80 C90,90 180,60 270,75 C360,90 450,100 540,80 C630,60 720,100 810,85 C900,70 990,90 1080,75 C1170,60 1260,85 1350,80 C1400,78 1440,85 1440,85 V120 H0 Z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23f6f3f3' d='M0,80 C90,90 180,60 270,75 C360,90 450,100 540,80 C630,60 720,100 810,85 C900,70 990,90 1080,75 C1170,60 1260,85 1350,80 C1400,78 1440,85 1440,85 V120 H0 Z'/%3E%3C/svg%3E");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom;
   z-index: 1;
   pointer-events: none;
+  filter: drop-shadow(0px -15px 7px rgba(0, 0, 0, 0.2));
 }
 
 .hero--leiding::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23fbe8ff' d='M0,80 C90,90 180,60 270,75 C360,90 450,100 540,80 C630,60 720,100 810,85 C900,70 990,90 1080,75 C1170,60 1260,85 1350,80 C1400,78 1440,85 1440,85 V120 H0 Z'/%3E%3C/svg%3E");
+}
+
+.hero--bivak::after {
+  background-image: none; 
+  
+  background: url('https://res.cloudinary.com/dph1xlgfc/image/upload/v1769521829/Bivak_bg_top_bbit91.png') center center;
+  background-size: cover;
+  background-repeat: repeat;
+
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath d='M0,80 C90,90 180,60 270,75 C360,90 450,100 540,80 C630,60 720,100 810,85 C900,70 990,90 1080,75 C1170,60 1260,85 1350,80 C1400,78 1440,85 1440,85 V120 H0 Z'/%3E%3C/svg%3E");
+  
+  mask-size: cover;
+  mask-repeat: repeat;
+  mask-position: bottom;
 }
 
 @media (max-width: 768px) {

@@ -5,6 +5,7 @@ const Actie = require('../models/Actie');
 const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../utils/cloudinary');
 const isAdmin = require('../middleware/isAdmin');
 
+/// ---------- Configuraties ---------- ///
 // Multer setup
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -15,10 +16,10 @@ const upload = multer({
         else cb(new Error('Alleen JPG/PNG/WEBP toegestaan'));
     }
 });
-
 router.use(isAdmin);
 
-// GET / - open editor pagina
+/// ---------- Routes ---------- ///
+// GET - Open editor pagina
 router.get('/', async (req, res) => {
     try {
         // Sorteer op order
@@ -34,7 +35,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST / - upload nieuwe actie
+// POST - Upload nieuwe actie
 router.post('/', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).send('Afbeelding is verplicht');
@@ -58,7 +59,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 });
 
-// POST /edit/:id - bewerk actie
+// POST - Bewerk actie
 router.post('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const { title, description, existingImagePublicId } = req.body;
@@ -81,7 +82,7 @@ router.post('/edit/:id', upload.single('image'), async (req, res) => {
     }
 });
 
-// POST /delete/:id - verwijder actie
+// POST - Verwijder actie
 router.post('/delete/:id', async (req, res) => {
     try {
         const actie = await Actie.findById(req.params.id);
@@ -96,7 +97,7 @@ router.post('/delete/:id', async (req, res) => {
     }
 });
 
-// POST /reorder - volgorde wijzigen
+// POST - Volgorde wijzigen van acties in carousel
 router.post('/reorder', express.json(), async (req, res) => {
     try {
         const { order } = req.body;

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <link rel="stylesheet" href="/css/bivak.css">
+    <link rel="stylesheet" href="/css/lid_worden.css">
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+    <%- include('../partials/hero', { title: 'Bivak', pageKey: 'bivak' }) %>
+
+    <main data-page="bivak">
+        <section class="bivak-pattern-row">
+            <div class="container">
+                <div class="row justify-content-center text-center g-0">
+                    <h2 class="bivak-title-small">Wat is bivak?</h2>
+                    <p class="bivak-text">
+                        Een bivak is een kamp waar we met heel de Chiro 10 dagen (7 dagen voor de Sloebers)
+                        op verplaatsing leuke activiteiten doen, elkaar beter leren kennen, herinneringen maken,
+                        nieuwe dingen leren, vuil worden, in tenten slapen en zo veel meer!
+                    </p>
+                    <p class="bivak-text">
+                        <strong>Wie mag mee?</strong> Alle leeftijden zijn welkom! De enige voorwaarde is
+                        dat een lid minstens 10 keer aanwezig was op een Chirozondag om mee te mogen op bivak.
+                        Hieronder vindt u meer specifieke informatie.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bivak-image-row m-0"></section>
+
+        <section class="bivak-white-row">
+            <div class="container py-5">
+                <div class="row g-4 d-flex align-items-stretch">
+                    <% 
+                        const datum = new Date(); 
+                        const bivakJaar = datum.getMonth() >= 8 ? datum.getFullYear() + 1 : datum.getFullYear();
+                        const titels = ["Bivak " + bivakJaar, "Inschrijven", "Bezoekdag & BBQ", "Bivak activiteiten", "Bagage", "Meer info"];
+                    %>
+
+                    <% cards.forEach((card, i) => { %>
+                        <div class="col-md-6 d-flex">
+                            <div class="card info-card p-4 shadow-sm w-100 d-flex flex-column">
+                                <h2 class="card-title text-center text-dark"><%= titels[i] %></h2>
+                                <div class="separator-red mx-auto my-3"></div>
+
+                                <div id="editor-<%= i %>" class="editor-container <%= isAdmin ? 'admin-editor' : '' %>" data-index="<%= i %>">
+                                    <%- card.content || '<p>Voeg tekst toe...</p>' %>
+                                </div>
+
+                                <% if(card.imageUrl) { %>
+                                    <div class="text-center mt-3"> 
+                                        <img src="<%= card.imageUrl %>" class="img-fluid rounded custom-img-bivak" alt="<%= titels[i] %>">
+                                    </div>
+                                <% } %>
+
+                                <div class="mt-auto pt-3 text-center">
+                                    <% if(i === 0) { %>
+                                        <% if(bivakPdfUrl) { %>
+                                            <a href="<%= bivakPdfUrl %>" class="btn btn-primary w-100" target="_blank">Open bivak-ludiekje</a>
+                                        <% } else { %>
+                                            <button class="btn btn-secondary w-100" disabled>Bivak-ludiekje nog niet beschikbaar</button>
+                                        <% } %>
+                                        <% if(isAdmin) { %>
+                                            <button class="btn btn-sm btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#pdfModal">Upload nieuw ludiekje</button>
+                                        <% } %>
+
+                                    <% } else if(i === 1) { %>
+                                        <% if(bivakInschrijvingsLink && bivakInschrijvingsLink.trim() !== '') { %>
+                                            <a href="<%= bivakInschrijvingsLink %>" class="btn btn-primary w-100" target="_blank">Inschrijven</a>
+                                        <% } else { %>
+                                            <button class="btn btn-secondary w-100" disabled>Inschrijvingen nog niet beschikbaar</button>
+                                        <% } %>
+                                        <% if(isAdmin) { %>
+                                            <button class="btn btn-sm btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#linkModal">Link Aanpassen</button>
+                                        <% } %>
+
+                                    <% } else if(i === 2) { %>
+                                        <% if(bivakBBQLink && bivakBBQLink.trim() !== '') { %>
+                                            <a href="<%= bivakBBQLink %>" class="btn btn-primary w-100" target="_blank">BBQ inschrijven</a>
+                                        <% } else { %>
+                                            <button class="btn btn-secondary w-100" disabled>BBQ inschrijven nog niet beschikbaar</button>
+                                        <% } %>
+                                        <% if(isAdmin) { %>
+                                            <button class="btn btn-sm btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#BBQLinkModal">Link Aanpassen</button>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+
+                                <% if(isAdmin) { %>
+                                    <div class="admin-controls mt-3 border-top pt-2 text-center">
+                                        <button class="btn btn-sm btn-success save-card-btn" data-index="<%= i %>">
+                                            <i class="fas fa-save"></i> Opslaan
+                                        </button>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </section>
+
+        <% if(isAdmin) { %>
+            <div class="modal fade" id="pdfModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="/bivak/admin/update-bivak-ludiekje" method="POST" enctype="multipart/form-data" class="modal-content">
+                        <div class="modal-header"><h5>Nieuw bivak-ludiekje uploaden</h5></div>
+                        <div class="modal-body">
+                            <input type="file" name="bivakPdf" class="form-control" accept="application/pdf" required>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button type="submit" class="btn btn-primary">Uploaden</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="modal fade" id="linkModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header"><h5>Inschrijvingslink Aanpassen</h5></div>
+                        <div class="modal-body">
+                            <input type="url" id="newLinkInput" class="form-control" value="<%= bivakInschrijvingsLink %>" placeholder="https://...">
+                            <small class="text-muted">Laat leeg om de knop inactief te maken.</small>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button id="saveLinkBtn" class="btn btn-primary">Link Opslaan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="BBQLinkModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header"><h5>BBQ inschrijven link aanpassen</h5></div>
+                        <div class="modal-body">
+                            <input type="url" id="newBBQLinkInput" class="form-control" value="<%= bivakBBQLink %>" placeholder="https://...">
+                            <small class="text-muted">Laat leeg om de knop inactief te maken.</small>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button id="saveBBQLinkBtn" class="btn btn-primary">Link Opslaan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="quillLinkModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header"><h5>Link invoegen</h5></div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Weergavenaam:</label>
+                                <input type="text" id="quillLinkText" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">URL:</label>
+                                <input type="url" id="quillLinkUrl" class="form-control" placeholder="https://...">
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                            <button id="confirmQuillLink" class="btn btn-primary">Invoegen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+            <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+            <script src="/js/bivak-editor.js"></script>
+        <% } %>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -14,12 +14,14 @@ const leidingAdminRouter = require('./routes/leidingAdmin');
 const actiesAdminRouter = require('./routes/actiesAdmin');
 const jaarkalenderRouter = require('./routes/jaarkalender');
 const jaarkalenderAdminRouter = require('./routes/jaarkalenderAdmin');
+const bivakAdminRouter = require('./routes/bivakAdmin');
 
 const pageConfigMiddleware = require('./middleware/pageConfig');
 
 const Nieuws = require('./models/Nieuws');
 const Leiding = require('./models/Leiding');
 const Actie = require('./models/Actie');
+const CardConfig = require('./models/CardConfig');
 
 /// ---------- Configurations ---------- ///
 const app = express();
@@ -69,6 +71,7 @@ app.use('/leiding/admin', leidingAdminRouter);
 app.use('/acties/admin', actiesAdminRouter)
 app.use('/jaarkalender', jaarkalenderRouter);
 app.use('/jaarkalender/admin', jaarkalenderAdminRouter);
+app.use('/bivak/admin', bivakAdminRouter);
 
 // GET /sitemap.xml - Genereer dynamische sitemap
 app.get('/sitemap.xml', async (req, res) => {
@@ -188,13 +191,50 @@ app.get('/acties/:id', async (req, res) => {
 });
 
 // GET /lid_worden - Lid worden pagina
-app.get('/lid_worden', (req, res) => {
-    res.render('pages/lid_worden', {
-        activePage: 'lid_worden',
-        isAdmin: req.session.isAdmin || false
-    });
+app.get('/lid_worden', async (req, res) => {
+    try {
+        let cardConfig = await CardConfig.findOne({ page: 'lid_worden' });
+        if (!cardConfig) {
+            const initialCards = Array(3).fill({ content: '', imageUrl: '' });
+            cardConfig = await CardConfig.create({ page: 'lid_worden', cards: initialCards });
+        }
+        res.render('pages/lid_worden', {
+            activePage: 'lid_worden',
+            isAdmin: req.session.isAdmin || false,
+            cards: cardConfig.cards
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Fout bij het laden van de lid worden pagina');
+    }
 });
 
+// GET /bivak - Bivak info pagina openen
+app.get('/bivak', async (req, res) => {
+    try {
+        let cardConfig = await CardConfig.findOne({ page: 'bivak' });
+
+        if (!cardConfig) {
+            const initialCards = Array(6).fill({ content: '', imageUrl: '' });
+            cardConfig = await CardConfig.create({ page: 'bivak', cards: initialCards });
+        }
+
+        // Haal bijkomende bivak instellingen op
+        const cfg = await require('./models/Config').findOne({ pageKey: 'bivak' });
+
+        res.render('pages/bivak', {
+            activePage: 'bivak',
+            cards: cardConfig.cards,
+            isAdmin: req.session.isAdmin || false,
+            bivakPdfUrl: cfg?.bivakPdfUrl || null,
+            bivakInschrijvingsLink: cfg?.bivakInschrijvingsLink || '',
+            bivakBBQLink: cfg?.bivakBBQLink || ''
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Fout bij het laden van de bivak pagina');
+    }
+});
 // GET /contact - Contact pagina
 app.get('/contact', async (req, res) => {
     let hoofdleidingen = [];
