@@ -1,6 +1,4 @@
-// ===== FORM LOGICA =====
 window.addEventListener('load', () => {
-    // ===== SELECTEER ELEMENTEN =====
     const form = document.getElementById('leidingForm');
     const formTitle = document.getElementById('formTitle');
     const formMode = document.getElementById('formMode');
@@ -29,8 +27,7 @@ window.addEventListener('load', () => {
     const leidingItems = document.querySelectorAll('.leiding-item');
     const listContainer = document.getElementById('leidingList');
 
-    // ===== HELPER FUNCTIES =====
-
+    /// ---------- Hulpfuncties ---------- ///
     /**
      * Toont de bestandsupload en verbergt de preview.
      */
@@ -133,8 +130,10 @@ window.addEventListener('load', () => {
         item.classList.add('active');
     }
 
-    // ===== EVENT HANDLERS =====
-
+    /// ---------- Event handlers ---------- ///
+    /**
+     * Load alle leiding in lijst
+     */
     leidingItems.forEach((item) => {
         item.addEventListener('click', (event) => {
             event.preventDefault();
@@ -142,6 +141,9 @@ window.addEventListener('load', () => {
         });
     });
 
+    /**
+     * Verander een image, toon nieuwe preview
+     */
     imageInput.addEventListener('change', function onImageChange() {
         if (this.files && this.files.length > 0) {
             updatePreview(this.files[0]);
@@ -156,6 +158,9 @@ window.addEventListener('load', () => {
         }
     });
 
+    /**
+     * Verwijder huidige fotos
+     */
     if (btnRemoveImage) {
         btnRemoveImage.addEventListener('click', () => {
             if (confirm('Weet u zeker dat u deze foto wilt verwijderen?')) {
@@ -166,8 +171,14 @@ window.addEventListener('load', () => {
         });
     }
 
+    /**
+     * Reset de form (iemand toevoegen)
+     */
     btnAddNew.addEventListener('click', resetForm);
 
+    /**
+     * Verwijder een leiding
+     */
     btnDelete.addEventListener('click', () => {
         if (confirm('Weet u zeker dat u deze leiding wilt verwijderen?')) {
             const id = leidingId.value;
@@ -179,6 +190,9 @@ window.addEventListener('load', () => {
         }
     });
 
+    /**
+     * Voeg nieuwe leiding toe of pas aan, groep is verplicht
+     */
     form.addEventListener('submit', (event) => {
         if (groupSelect && !groupSelect.value) {
             event.preventDefault();
@@ -187,7 +201,7 @@ window.addEventListener('load', () => {
         }
     });
 
-    // ===== INIT =====
+    /// ---------- Initialiseer ---------- ///
     if (listContainer) {
         const selectedId = listContainer.dataset.selectedId;
         if (selectedId) {

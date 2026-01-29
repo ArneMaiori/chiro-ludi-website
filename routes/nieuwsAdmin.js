@@ -8,7 +8,7 @@ const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../util
 const isAdmin = require('../middleware/isAdmin');
 
 
-/// ---------- Configurations ---------- ///
+/// ---------- Configuraties ---------- ///
 // Multer
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -23,8 +23,8 @@ const upload = multer({
 router.use(isAdmin); 
 
 
-/// ---------- Nieuws Admin Routes ---------- ///
-// GET /nieuws/admin/create - Open aanmaak formulier
+/// ---------- Routes ---------- ///
+// GET - Open aanmaak formulier
 router.get('/create', (req, res) => {
     const returnPage = req.query.page || 1;
 
@@ -36,7 +36,7 @@ router.get('/create', (req, res) => {
     });
 });
 
-// POST /nieuws/admin - Upload nieuwe post
+// POST - Upload nieuwe post
 router.post('/', upload.single('image'), async (req, res) => {
     try {
         const { title, description } = req.body;
@@ -68,7 +68,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 });
 
-// GET /nieuws/admin/edit/:id - Open edit formulier
+// GET - Open edit formulier
 router.get('/edit/:id', async (req, res) => {
     try {
         let post = await Nieuws.findById(req.params.id);
@@ -89,7 +89,7 @@ router.get('/edit/:id', async (req, res) => {
     }
 });
 
-// POST /nieuws/admin/edit/:id - Update bestaande post
+// POST - Update bestaande post
 router.post('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const { title, description, existingImageUrl, existingImagePublicId, imageRemoved } = req.body;
@@ -129,7 +129,7 @@ router.post('/edit/:id', upload.single('image'), async (req, res) => {
     }
 });
 
-// POST /nieuws/admin/delete/:id - Verwijder post
+// POST - Verwijder bestaande post
 router.post('/delete/:id', async (req, res) => {
     try {
         const { existingImagePublicId } = req.body;

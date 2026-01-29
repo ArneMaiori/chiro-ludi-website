@@ -10,11 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageError = document.getElementById('imageError');
     const photoLabel = document.getElementById('photoLabel');
 
-    // Hidden fields
     const existingIdField = document.getElementById('existingImagePublicId');
     const existingUrlField = document.getElementById('existingImageUrl');
 
-    // ===== Link Functionaliteit =====
+    /// ---------- Link functionaliteit ---------- ///
     let linkMap = {};
 
     /** * Zet de opgeslagen HTML <a> tags om naar de bewerkbare [link: tekst] syntax 
@@ -50,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Upload link insertion
     document.getElementById('confirmInsertLink').addEventListener('click', () => {
         const text = document.getElementById('linkText').value.trim();
         const url = document.getElementById('linkUrl').value.trim();
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descriptionArea.value = processDescription(descriptionArea.value);
     });
 
-    // ===== Formulier reset / load =====
+    /// ---------- Form reload/reset ---------- ///
     // Reset
     window.resetForm = function () {
         form.action = '/acties/admin';
@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('.action-item').forEach(i => i.classList.remove('active'));
     };
-
     document.getElementById('btnNewAction').addEventListener('click', window.resetForm);
 
     // Load
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     };
 
-    // Image preview
+    /// ---------- Image preview ---------- ///
     imageInput.addEventListener('change', function () {
         imageError.classList.add('d-none');
         
@@ -161,7 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ===== Reorder acties =====
+    /// ---------- Reorder acties ---------- ///
+    // Save nieuwe order van acties
     async function saveOrder() {
         const items = document.querySelectorAll('.action-item');
         const order = Array.from(items).map(item => item.dataset.id);
@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Actie omhoog
     document.querySelectorAll('.btn-move-up').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -185,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Actie omlaag
     document.querySelectorAll('.btn-move-down').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();

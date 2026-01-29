@@ -7,6 +7,8 @@ const Leiding = require('../models/Leiding');
 const { uploadBufferToCloudinary, deleteImageFromCloudinary } = require('../utils/cloudinary');
 const isAdmin = require('../middleware/isAdmin');
 
+/// ---------- Configuraties ---------- ///
+// Multer storage en upload
 const storage = multer.memoryStorage();
 const upload = multer({
     storage,
@@ -17,8 +19,11 @@ const upload = multer({
         else cb(new Error('Alleen JPG/PNG/WEBP toegestaan'));
     }
 });
+router.use(isAdmin);
 
-router.get('/editor', isAdmin, async (req, res) => {
+/// ---------- Routes ---------- ///
+// GET - Open de leiding editor
+router.get('/editor', async (req, res) => {
     try {
         const leidingList = await Leiding.find().sort({ name: 1 });
         leidingList.sort((a, b) => {
@@ -37,8 +42,8 @@ router.get('/editor', isAdmin, async (req, res) => {
     }
 });
 
-// routes/leidingAdmin.js - POST / route aanpassen
-router.post('/', isAdmin, upload.single('image'), async (req, res) => {
+// POST - Nieuwe leiding toevoegen
+router.post('/', upload.single('image'), async (req, res) => {
     try {
         const { name, phone, email, bio, group, isHoofdleiding } = req.body;
 
@@ -77,8 +82,8 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
     }
 });
 
-// POST /edit/:id - Edit leidings data en sla op
-router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
+// POST - Leiding data aanpassen
+router.post('/edit/:id', upload.single('image'), async (req, res) => {
     try {
         const {
             name,
@@ -135,7 +140,8 @@ router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
     }
 });
 
-router.post('/delete/:id', isAdmin, async (req, res) => {
+// POST - Leiding verwijderen
+router.post('/delete/:id', async (req, res) => {
     try {
         const leiding = await Leiding.findById(req.params.id);
         if (leiding && leiding.imagePublicId) {

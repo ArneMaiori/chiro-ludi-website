@@ -7,9 +7,7 @@ const eventForm = document.getElementById('event-form');
 const formTitle = document.getElementById('form-title');
 const submitBtn = document.getElementById('submit-btn');
 
-/**
- * Laadt een event in het formulier om aan te passen
- */
+// Load een event in de form om deze aan te passen
 function editEvent(id, day, month, title) {
     if (!formTitle) return;
     
@@ -32,9 +30,7 @@ function editEvent(id, day, month, title) {
     eventForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-/**
- * Reset formulier naar toevoeg modus
- */
+// Reset form zodat we een nieuw event kunnen toevoegen
 function resetForm() {
     if (!formTitle) return;
     
@@ -52,9 +48,7 @@ function resetForm() {
     colSubmit.className = "col-md-3";
 }
 
-/**
- * Event opslaan (Toevoegen of Aanpassen)
- */
+// Event opslaan (toevoegen of aanpassen)
 if (eventForm) {
     eventForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -82,9 +76,7 @@ if (eventForm) {
     });
 }
 
-/**
- * Event verwijderen uit de kalender
- */
+// Event verwijderen
 async function deleteEvent(id, monthIndex, event) {
     if (!confirm('Zeker weten dat je dit wilt verwijderen?')) return;
 

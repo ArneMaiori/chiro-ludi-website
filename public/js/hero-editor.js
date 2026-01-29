@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('heroEditModal');
     if (!modal) return;
 
-    // --- Formulier Elementen ---
     const form = document.getElementById('heroImageForm');
     const modalPageKey = document.getElementById('modalPageKey');
     const modalExistingImagePublicId = document.getElementById('modalExistingImagePublicId');
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalPreviewImage = document.getElementById('modalPreviewImage');
     const currentImageLabel = document.getElementById('currentImageLabel');
     
-    // --- Sectie Elementen ---
     const displaySection = document.getElementById('modalImageDisplaySection');
     const uploadSection = document.getElementById('modalImageUploadSection');
     const btnRemoveImage = document.getElementById('modalBtnRemoveImage');
@@ -20,8 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const DEFAULT_URL = 'https://res.cloudinary.com/dph1xlgfc/image/upload/v1759244464/GebouwChiro_rmjnjp.jpg';
     let originalUrl = '';
 
-    // --- Zichtbaarheid Functies ---
-
+    /// ---------- Image display ---------- ///
     /**
      * Toont de afbeelding en de bijbehorende label en verwijderknopstatus.
      * @param {string} url - De URL van de afbeelding.
@@ -36,9 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnRemoveImage.style.display = isDefault ? 'none' : 'inline-block';
     }
 
-    /**
-     * Verbergt de display sectie en toont de upload sectie (wordt alleen gebruikt bij reset)
-     */
+    // Verbergt de display sectie en toont de upload sectie (wordt alleen gebruikt bij reset)
     function resetToDefaultUpload() {
         modalPreviewImage.src = DEFAULT_URL;
         currentImageLabel.textContent = 'Huidige Afbeelding (standaard)';
@@ -46,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         newImageInput.value = '';
     }
 
-    // --- Modal Events ---
-    // Bij het openen van de modal
+    /// ---------- Modal ---------- ///
+    // Open modal
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget; 
         const pageKey = button.getAttribute('data-page-key');
@@ -67,9 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showImageDisplay(currentUrl, isDefault);
     });
 
-    /**
-     * Helper functie om een live preview te tonen
-     */
+    // Hulpfunctie om image preview te tonen
     function updatePreview(file) {
         const reader = new FileReader();
         reader.onload = (e) => {

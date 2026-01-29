@@ -4,7 +4,7 @@ const router = express.Router();
 const Leiding = require('../models/Leiding');
 
 
-// GET / - Ga naar leidings pagina
+// GET - Open leidings pagina
 router.get('/', async (req, res) => {
   let leiding = [];
 

@@ -3,8 +3,8 @@ const router = express.Router();
 
 const Nieuws = require('../models/Nieuws');
 
-/// ---------- Nieuws Routes ---------- ///
-// GET /nieuws - nieuws pagina
+/// ---------- Routes ---------- ///
+// GET - Open nieuws pagina
 router.get('/', async (req, res) => {
   let nieuws = [];
   let page = 1;
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
     });
 });
 
-// GET /nieuws/:id - nieuws in detail pagina
+// GET - Open detail pagina voor een nieuws post
 router.get('/:id', async (req, res) => {
   try {
     const nieuwsItem = await Nieuws.findById(req.params.id);

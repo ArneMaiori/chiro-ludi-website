@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMsg = document.getElementById('errorMessage');
     const adminModalEl = document.getElementById('adminModal');
 
+    /// ---------- Login/out ---------- ///
+    // Login in
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close modal 
+    // Close login modal 
     if (adminModalEl) {
         adminModalEl.addEventListener('shown.bs.modal', () => {
             document.getElementById('adminPassword').focus();

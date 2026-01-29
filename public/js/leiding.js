@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.leiding-card');
 
+    /**
+     * Event handlers voor de info card van leiding
+     */
     cards.forEach(card => {
         card.addEventListener('click', function(e) {
-            // Als we op een link klikken (email/tel), draai de kaart NIET om
+            // Als we op een link klikken (email/tel), draai de kaart niet om
             if (e.target.tagName === 'A' || e.target.closest('a')) {
                 return;
             }
@@ -40,7 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Click buiten een card sluit alle cards
+    /**
+     * Sluit alle cards als we ene openen
+     */
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.leiding-card')) {
             cards.forEach(card => {

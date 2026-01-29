@@ -1,4 +1,4 @@
-// Slaat de link tekst en URL op tijdens bewerking
+/// ---------- Links ---------- ///
 let linkMap = {};
 
 /** 
@@ -36,10 +36,8 @@ function processDescription(rawContent) {
 }
 
 
-// ===== DOM LOGICA =====
+/// ---------- Dom logica ---------- ///
 window.addEventListener('load', () => {
-    // ===== SELECTEER ELEMENTEN =====
-    // Afbeelding elementen
     const imageInput = document.getElementById('image');
     const existingImageUrlInput = document.getElementById('existingImageUrl');
     const imageRemovedInput = document.getElementById('imageRemoved');
@@ -48,11 +46,9 @@ window.addEventListener('load', () => {
     const displaySection = document.getElementById('imageDisplaySection');
     const btnRemoveImage = document.getElementById('btnRemoveImage');
     
-    // Inhoud elementen
     const descriptionTextArea = document.getElementById('description');
     const existingDescriptionInput = document.getElementById('hiddenDescription'); 
 
-    // Link elementen
     const insertLinkBtn = document.getElementById('insertLinkBtn');
     const confirmInsertLink = document.getElementById('confirmInsertLink');
     const linkModalElement = document.getElementById('linkModal');
@@ -61,7 +57,7 @@ window.addEventListener('load', () => {
     const linkUrlInput = document.getElementById('linkUrl');
 
 
-    // ===== VERWERK DATA =====
+    /// ---------- Verwerk data ---------- ///
     // Afbeelding
     const existingImageUrl = existingImageUrlInput.value;
     if (existingImageUrl) {
@@ -78,7 +74,7 @@ window.addEventListener('load', () => {
     }
 
 
-    // ===== AFBEELDING VIEW =====
+    /// ---------- Afbeelding view ---------- ///
     // Toon de upload file sectie
     function showImageUpload() {
         uploadSection.style.display = '';
@@ -102,8 +98,10 @@ window.addEventListener('load', () => {
     }
 
 
-    // ===== AFBEELDING BEHEER =====
-    // Wanneer gebruiker een bestand selecteert
+    /// ---------- Afbeelding beheer ---------- ///
+    /**
+     * Toon nieuw geupload bestand
+     */
     imageInput.addEventListener('change', function() {
         if (this.files && this.files.length > 0) {
             updatePreview(this.files[0]); 
@@ -122,7 +120,9 @@ window.addEventListener('load', () => {
         }
     });
 
-    // Afbeelding Verwijderen
+    /**
+     * Afbeelding verwijderen
+     */
     if (btnRemoveImage) {
         btnRemoveImage.addEventListener('click', () => {
             if (confirm('Weet u zeker dat u deze afbeelding wilt verwijderen?')) {
@@ -136,11 +136,13 @@ window.addEventListener('load', () => {
     }
 
 
-    // ===== LINK INVOEGEN =====
+    /// ---------- Link invoegen ---------- ///
     let cursorStart = 0;
     let cursorEnd = 0;
 
-    // Toon link toevoegen modal
+    /**
+     * Toon link toevoegen modal
+     */
     insertLinkBtn.addEventListener('click', () => {
         cursorStart = descriptionTextArea.selectionStart;
         cursorEnd = descriptionTextArea.selectionEnd;
@@ -149,7 +151,9 @@ window.addEventListener('load', () => {
         linkModal.show();
     });
 
-    // Insert link
+    /**
+     * Inset link
+     */
     confirmInsertLink.addEventListener('click', () => {
         const text = linkTextInput.value.trim();
         const url = linkUrlInput.value.trim();
@@ -170,7 +174,9 @@ window.addEventListener('load', () => {
         descriptionTextArea.focus();
     });
 
-    // ===== FORM SUBMISSION =====
+    /**
+     * Submit form
+     */
     document.getElementById('nieuwsForm').addEventListener('submit', (e) => {
         // Converteer de ruwe editor-tekst naar HTML
         const htmlContent = processDescription(descriptionTextArea.value);
