@@ -10,7 +10,10 @@
         </a>
       </div>
       <a href="/privacy" class="text-white text-decoration-none small">Privacyverklaring | </a>
-      <small>&copy; 2025 Chiro Ludi. Alle rechten voorbehouden. | </small>
+      <% 
+        const jaar = new Date().getFullYear(); 
+      %>
+      <small>&copy; <%= jaar %> Chiro Ludi. Alle rechten voorbehouden. | </small>
       <!-- Admin link/logout -->
       <% if (typeof isAdmin !=='undefined' && isAdmin) { %>
         <a href="#" id="logoutBtn" class="text-white text-decoration-none small">
