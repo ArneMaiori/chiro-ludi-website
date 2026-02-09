@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo').default;
 const path = require("path");
 const SibApiV3Sdk = require('@getbrevo/brevo');
+const rateLimit = require("express-rate-limit");
+const axios = require("axios");
 
 const nieuwsRouter = require('./routes/nieuws');
 const adminRouter = require('./routes/admin');
@@ -58,6 +60,12 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("Database connected succesfully"))
     .catch(err => console.log(err));
 
+
+const contactLimit = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: "U heeft te veel berichten verstuurd, probeer het later opnieuw."
+});
 
 
 /// ---------- Routes ---------- ///
@@ -262,35 +270,60 @@ app.get('/privacy', (req, res) => {
 
 
 // POST /submit-contact - Stel vraag via email
-app.post('/submit-contact', async (req, res) => {
-    const { naam, email, onderwerp, bericht } = req.body;
-
-    // Configuratie van API 
-    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-    let apiKey = apiInstance.authentications['apiKey'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
-
-    // Email object
-    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail = {
-        sender: { name: "Chiro Ludi Website", email: process.env.EMAIL_USER },
-        to: [{ email: process.env.EMAIL_USER }],
-        replyTo: { email: email, name: naam },
-        subject: `Website vraag: ${onderwerp || 'Geen onderwerp'}`,
-        htmlContent: `
-            <h3>Nieuw bericht via de website</h3>
-            <p><b>Naam:</b> ${naam}</p>
-            <p><b>E-mail van afzender:</b> ${email}</p>
-            <p><b>Bericht:</b><br>${bericht}</p>
-        `
+app.post('/submit-contact', contactLimit, async (req, res) => {
+    // Honeypot strategie om bots te weigeren
+    if (req.body.honeypot) {
+        return res.status(400).send('Bot gedetecteerd');
     };
 
+    const { naam, email, onderwerp, bericht } = req.body;
+    const captchaToken = req.body['g-recaptcha-response'];
+    if (!captchaToken) {
+        return res.status(400).send('Captcha verificatie ontbreekt.');
+    }
+
     try {
-        await apiInstance.sendTransacEmail(sendSmtpEmail);
-        console.log('E-mail succesvol verzonden via HTTP API');
-        res.redirect('/contact?status=success');
+        const response = await axios.post(
+            `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`
+        );
+
+        const { success, score } = response.data;
+        if (!success || score < 0.5) {
+            console.log(`Bot gedetecteerd! Score: ${score}`);
+            return res.redirect('/contact?status=error&type=bot');
+        }
+
+        // Configuratie van API 
+        let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+        let apiKey = apiInstance.authentications['apiKey'];
+        apiKey.apiKey = process.env.BREVO_API_KEY;
+
+        // Email object
+        let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+        sendSmtpEmail = {
+            sender: { name: "Chiro Ludi Website", email: process.env.EMAIL_USER },
+            to: [{ email: process.env.EMAIL_USER }],
+            replyTo: { email: email, name: naam },
+            subject: `Website vraag: ${onderwerp || 'Geen onderwerp'}`,
+            htmlContent: `
+                <h3>Nieuw bericht via de website</h3>
+                <p><b>Naam:</b> ${naam}</p>
+                <p><b>E-mail van afzender:</b> ${email}</p>
+                <p><b>Bericht:</b><br>${bericht}</p>
+            `
+        };
+
+        try {
+            await apiInstance.sendTransacEmail(sendSmtpEmail);
+            console.log('E-mail succesvol verzonden via HTTP API');
+            res.redirect('/contact?status=success');
+        } catch (error) {
+            console.error('Brevo API Error:', error);
+            res.redirect('/contact?status=error');
+        }
+
     } catch (error) {
-        console.error('Brevo API Error:', error);
+        console.error('Captcha error:', error);
         res.redirect('/contact?status=error');
     }
 });
