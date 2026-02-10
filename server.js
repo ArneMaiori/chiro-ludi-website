@@ -278,6 +278,7 @@ app.post('/submit-contact', contactLimit, async (req, res) => {
 
     const { naam, email, onderwerp, bericht } = req.body;
     const captchaToken = req.body['g-recaptcha-response'];
+    
     if (!captchaToken) {
         return res.status(400).send('Captcha verificatie ontbreekt.');
     }
@@ -287,6 +288,7 @@ app.post('/submit-contact', contactLimit, async (req, res) => {
             `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`
         );
 
+        console.log('reCAPTCHA response:', response.data);
         const { success, score } = response.data;
         if (!success || score < 0.5) {
             console.log(`Bot gedetecteerd! Score: ${score}`);
