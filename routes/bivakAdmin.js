@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const path = require('path');
 
 const Config = require('../models/Config');
 const CardConfig = require('../models/CardConfig');
@@ -19,7 +20,7 @@ router.use(isAdmin);
 
 // Multer storage voor PDF van bivak-ludiekje
 const pdfStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, filesDir),
+  destination: (req, file, cb) => cb(null, path.join(__dirname, '../public/files')),
   filename: (req, file, cb) => cb(null, 'bivak-ludiekje.pdf')
 });
 
